@@ -26,7 +26,7 @@ public class UserController {
     @Resource
     private UserService userService;
 
-    @RequestMapping("/settings/qx/user/doLogin")
+    @RequestMapping("/settings/qx/user/doLogin.do")
     public String doLogin(){
         return "settings/qx/user/login";
     }

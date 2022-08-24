@@ -5,7 +5,7 @@
 </head>
 <body>
 	<script type="text/javascript">
-		document.location.href = "${pageContext.request.contextPath}/settings/qx/user/doLogin";
+		document.location.href = "${pageContext.request.contextPath}/settings/qx/user/doLogin.do";
 	</script>
 </body>
 </html>
