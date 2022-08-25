@@ -59,7 +59,6 @@ public class ActivityController {
             retObject.setCode(Contants.RETURN_OBJECT_CODE_FAIL);
             retObject.setMessage("系统忙,请稍后重试....");
         }
-
         return retObject;
     }
 }
