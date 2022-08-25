@@ -6,7 +6,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<base href="<%=basePath%>"
+	<base href="<%=basePath%>"/>
 <meta charset="UTF-8">
 
 <link href="jquery/bootstrap_3.3.0/css/bootstrap.min.css" type="text/css" rel="stylesheet" />
@@ -20,9 +20,86 @@
 <script type="text/javascript">
 
 	$(function(){
-
-
-
+		//给"创建"按钮添加单击事件
+		$("#createActivityBtn").click(function(){
+			//初始化工作
+			//重置表单
+			$("#createActivityForm")[0].reset();
+			//弹出创建市场活动的模态窗口
+			$("#createActivityModal").modal("show");
+		});
+		myDate($("#create-startDate"));
+		myDate($("#create-endDate"));
+		//给"保存"按钮添加单击事件
+		$("#saveCreateActivityBtn").click(function(){
+			//获取参数
+			var owner=$("#create-marketActivityOwner").val();
+			var name=$.trim($("#create-marketActivityName").val());
+			var startDate=$("#create-startDate").val();
+			var endDate=$("#create-endDate").val();
+			var cost=$.trim($("#create-cost").val());
+			var description=$("#create-description").val();
+			/*
+			 *所有者和名称不能为空
+			 *如果开始日期和结束日期都不为空,则结束日期不能比开始日期小
+			 *成本只能为非负整数
+			 */
+			//表单验证
+			if(owner == ""){
+				alert("所有者不能为空...");
+				return;
+			}
+			if(name == ""){
+				alert("名称不能为空...");
+				return;
+			}
+			if(startDate != "" && endDate != ""){
+				if(endDate<startDate){
+					alert("结束日期不能比开始日期小...");
+					return;
+				}
+			}
+			var regExp=/^(([1-9]\d*)|0)$/;
+			if(!regExp.test(cost)){
+				alert("成本只能是非负整数...");
+				return;
+			}
+			//发送请求
+			$.ajax({
+				url:"workbench/activity/saveCreateActivity.do",
+				type:"post",
+				dataType:"json",
+				data:{
+					owner:owner,
+					name:name,
+					startDate:startDate,
+					endDate:endDate,
+					cost:cost,
+					description:description
+				},
+				success:function(data){
+					if(data.code == "1"){
+						//关闭模态窗口
+						$("#createActivityModal").modal("hide");
+					}else{
+						alert(data.message);
+						$("#crateActivityModal").modal("show");
+					}
+				}
+			});
+		});
+		//设置日历插件
+		function myDate(id) {
+			id.datetimepicker({
+				language:"zh-CN",
+				format:"yyyy-mm-dd",
+				autoclose:true,
+				minView:"month",
+				initialDate:new Date(),
+				todayBtn:true,
+				clearBtn:true
+			});
+		}
 	});
 
 </script>
@@ -41,7 +118,7 @@
 				</div>
 				<div class="modal-body">
 
-					<form class="form-horizontal" role="form">
+					<form id="createActivityForm" class="form-horizontal" role="form">
 
 						<div class="form-group">
 							<label for="create-marketActivityOwner" class="col-sm-2 control-label">所有者<span style="font-size: 15px; color: red;">*</span></label>
@@ -59,13 +136,13 @@
 						</div>
 
 						<div class="form-group">
-							<label for="create-startTime" class="col-sm-2 control-label">开始日期</label>
+							<label for="create-startDate" class="col-sm-2 control-label" readonly>开始日期</label>
 							<div class="col-sm-10" style="width: 300px;">
-								<input type="text" class="form-control" id="create-startTime">
+								<input type="text" class="form-control" id="create-startDate">
 							</div>
-							<label for="create-endTime" class="col-sm-2 control-label">结束日期</label>
+							<label for="create-endDate" class="col-sm-2 control-label" readonly>结束日期</label>
 							<div class="col-sm-10" style="width: 300px;">
-								<input type="text" class="form-control" id="create-endTime">
+								<input type="text" class="form-control" id="create-endDate">
 							</div>
 						</div>
                         <div class="form-group">
@@ -76,9 +153,9 @@
                             </div>
                         </div>
 						<div class="form-group">
-							<label for="create-describe" class="col-sm-2 control-label">描述</label>
+							<label for="create-description" class="col-sm-2 control-label">描述</label>
 							<div class="col-sm-10" style="width: 81%;">
-								<textarea class="form-control" rows="3" id="create-describe"></textarea>
+								<textarea class="form-control" rows="3" id="create-description"></textarea>
 							</div>
 						</div>
 
@@ -86,8 +163,8 @@
 
 				</div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-					<button type="button" class="btn btn-primary" data-dismiss="modal">保存</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal" >关闭</button>
+					<button type="button" class="btn btn-primary" id="saveCreateActivityBtn" >保存</button>
 				</div>
 			</div>
 		</div>
@@ -244,7 +321,7 @@
 			</div>
 			<div class="btn-toolbar" role="toolbar" style="background-color: #F7F7F7; height: 50px; position: relative;top: 5px;">
 				<div class="btn-group" style="position: relative; top: 18%;">
-				  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createActivityModal"><span class="glyphicon glyphicon-plus"></span> 创建</button>
+				  <button type="button" class="btn btn-primary" id="createActivityBtn"><span class="glyphicon glyphicon-plus"></span> 创建</button>
 				  <button type="button" class="btn btn-default" data-toggle="modal" data-target="#editActivityModal"><span class="glyphicon glyphicon-pencil"></span> 修改</button>
 				  <button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-minus"></span> 删除</button>
 				</div>
