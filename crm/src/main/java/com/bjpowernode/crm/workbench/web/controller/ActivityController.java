@@ -16,7 +16,9 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Date 2022/8/25 14:18
@@ -60,5 +62,28 @@ public class ActivityController {
             retObject.setMessage("系统忙,请稍后重试....");
         }
         return retObject;
+    }
+
+    @RequestMapping("/workbench/activity/queryActivityByConditionForPage.do")
+    @ResponseBody
+    public Object queryActivityByConditionForPage(String owner,String name,String startDate,String endDate,
+                                                  Integer pageNum,Integer pageSize){
+        //封装参数
+        Map<String,Object> map=new HashMap<>();
+        map.put("owner",owner);
+        map.put("name",name);
+        map.put("startDate",startDate);
+        map.put("endDate",endDate);
+        map.put("pageNo",(pageNum-1)*pageSize);
+        map.put("pageSize",pageSize);
+        //调用service,处理业务,查询长活动列表
+        List<Activity> activityList=activityService.queryActivityByConditionForPage(map);
+        //查询总条数
+        int totalRows=activityService.queryCountByActivityForCondition(map);
+        Map<String,Object> map1=new HashMap<>();
+        map1.put("activityList",activityList);
+        map1.put("totalRows",totalRows);
+
+        return map1;
     }
 }

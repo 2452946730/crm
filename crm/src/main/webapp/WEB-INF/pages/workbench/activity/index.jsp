@@ -3,7 +3,6 @@
 <%
 	String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+request.getContextPath()+"/";
 %>
-<!DOCTYPE html>
 <html>
 <head>
 	<base href="<%=basePath%>"/>
@@ -16,10 +15,16 @@
 <script type="text/javascript" src="jquery/bootstrap_3.3.0/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="jquery/bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.js"></script>
 <script type="text/javascript" src="jquery/bootstrap-datetimepicker-master/locale/bootstrap-datetimepicker.zh-CN.js"></script>
+<%--引入pagination插件--%>
+<link type="text/css" rel="stylesheet" href="jquery/bs_pagination-master/css/jquery.bs_pagination.min.css" />
+<script type="text/javascript" src="jquery/bs_pagination-master/js/jquery.bs_pagination.min.js"></script>
+<script type="text/javascript" src="jquery/bs_pagination-master/localization/en.js"></script>
 
 <script type="text/javascript">
 
 	$(function(){
+		//页面加载完成,查询所有市场活动
+		queryActivityByConditionForPage(1,10);
 		//给"创建"按钮添加单击事件
 		$("#createActivityBtn").click(function(){
 			//初始化工作
@@ -81,6 +86,8 @@
 					if(data.code == "1"){
 						//关闭模态窗口
 						$("#createActivityModal").modal("hide");
+						//刷新市场活动列表,显示第一页的数据,保持每页显示的条数不变
+						queryActivityByConditionForPage(1,$("#pagination").bs_pagination("getOption","currentPage"));
 					}else{
 						alert(data.message);
 						$("#crateActivityModal").modal("show");
@@ -88,19 +95,83 @@
 				}
 			});
 		});
-		//设置日历插件
-		function myDate(id) {
-			id.datetimepicker({
-				language:"zh-CN",
-				format:"yyyy-mm-dd",
-				autoclose:true,
-				minView:"month",
-				initialDate:new Date(),
-				todayBtn:true,
-				clearBtn:true
-			});
-		}
+		//点击"查询"按钮,按条件查询
+		$("#queryBtn").click(function () {
+			queryActivityByConditionForPage(1,$("#pagination").bs_pagination("getOption","currentPage"));
+		});
 	});
+	//设置日历插件
+	function myDate(id) {
+		id.datetimepicker({
+			language:"zh-CN",
+			format:"yyyy-mm-dd",
+			autoclose:true,
+			minView:"month",
+			initialDate:new Date(),
+			todayBtn:true,
+			clearBtn:true
+		});
+	}
+	//查询市场活动的函数
+	function queryActivityByConditionForPage(pageNum,pageSize) {
+		//收集参数
+		var name=$("#query-name").val();
+		var owner=$("#query-owner").val();
+		var startDate=$("#query-startDate").val();
+		var endDate=$("#query-endDate").val();
+		//var pageNum=1;
+		//var pageSize=10;
+		//发送请求
+		$.ajax({
+			url:"workbench/activity/queryActivityByConditionForPage.do",
+			data:{
+				name:name,
+				owner:owner,
+				startDate:startDate,
+				endDate:endDate,
+				pageNum:pageNum,
+				pageSize:pageSize
+			},
+			type:"post",
+			dataType:"json",
+			success:function(data){
+				$("#totalRowsB").html(data.totalRows);
+				var htmlStr='';
+				$.each(data.activityList,function (index, obj) {
+					htmlStr+="<tr class=\"active\">";
+					htmlStr+="<td><input type=\"checkbox\" value=\""+obj.id+"\" /></td>";
+					htmlStr+="<td><a style=\"text-decoration: none; cursor: pointer;\" onclick=\"window.location.href='detail.html';\">"+obj.name+"</a></td>";
+					htmlStr+="<td>"+obj.owner+"</td>";
+					htmlStr+="<td>"+obj.startDate+"</td>";
+					htmlStr+="<td>"+obj.endDate+"</td>";
+					htmlStr+="</tr>";
+				});
+				$("#activityListTBody").html(htmlStr);
+				//计算总页数
+				var totalPages=1;
+				if(data.totalRows%pageNum ==0){
+					totalPages=data.totalRows/pageNum;
+				}else{
+					totalPages=parseInt(data.totalRows/pageNum)+1;
+				}
+				//调用工具函数,完成分页查询
+				$("#pagination").bs_pagination({
+					totalPages:totalPages,
+					currentPage: pageNum,
+					rowsPerPage: pageSize,
+					totalRows: data.totalRows,
+					visiblePageLinks: 5,
+
+					showGoToPage: true,
+					showRowsPerPage: true,
+					showRowsInfo: true,
+					onChangePage: function(event,pageObj) {// returns page_num and rows_per_page after a link has clicked
+						queryActivityByConditionForPage(pageObj.currentPage,pageObj.rowsPerPage);
+					}
+				});
+			}
+		});
+	}
 
 </script>
 </head>
@@ -136,13 +207,13 @@
 						</div>
 
 						<div class="form-group">
-							<label for="create-startDate" class="col-sm-2 control-label" readonly>开始日期</label>
+							<label for="create-startDate" class="col-sm-2 control-label"  >开始日期</label>
 							<div class="col-sm-10" style="width: 300px;">
-								<input type="text" class="form-control" id="create-startDate">
+								<input type="text" class="form-control" id="create-startDate" readonly>
 							</div>
-							<label for="create-endDate" class="col-sm-2 control-label" readonly>结束日期</label>
+							<label for="create-endDate" class="col-sm-2 control-label"  >结束日期</label>
 							<div class="col-sm-10" style="width: 300px;">
-								<input type="text" class="form-control" id="create-endDate">
+								<input type="text" class="form-control" id="create-endDate" readonly>
 							</div>
 						</div>
                         <div class="form-group">
@@ -290,14 +361,14 @@
 				  <div class="form-group">
 				    <div class="input-group">
 				      <div class="input-group-addon">名称</div>
-				      <input class="form-control" type="text">
+				      <input class="form-control" type="text" id="query-name">
 				    </div>
 				  </div>
 
 				  <div class="form-group">
 				    <div class="input-group">
 				      <div class="input-group-addon">所有者</div>
-				      <input class="form-control" type="text">
+				      <input class="form-control" type="text" id="query-owner">
 				    </div>
 				  </div>
 
@@ -305,17 +376,17 @@
 				  <div class="form-group">
 				    <div class="input-group">
 				      <div class="input-group-addon">开始日期</div>
-					  <input class="form-control" type="text" id="startTime" />
+					  <input class="form-control" type="text" id="query-startDate" />
 				    </div>
 				  </div>
 				  <div class="form-group">
 				    <div class="input-group">
 				      <div class="input-group-addon">结束日期</div>
-					  <input class="form-control" type="text" id="endTime">
+					  <input class="form-control" type="text" id="query-endDate">
 				    </div>
 				  </div>
 
-				  <button type="submit" class="btn btn-default">查询</button>
+				  <button type="button" class="btn btn-default" id="queryBtn">查询</button>
 
 				</form>
 			</div>
@@ -342,8 +413,8 @@
 							<td>结束日期</td>
 						</tr>
 					</thead>
-					<tbody>
-						<tr class="active">
+					<tbody id="activityListTBody">
+						<%--<tr class="active">
 							<td><input type="checkbox" /></td>
 							<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href='detail.html';">发传单</a></td>
                             <td>zhangsan</td>
@@ -356,14 +427,15 @@
                             <td>zhangsan</td>
                             <td>2020-10-10</td>
                             <td>2020-10-20</td>
-                        </tr>
+                        </tr>--%>
 					</tbody>
 				</table>
+				<div id="pagination"></div>
 			</div>
 
-			<div style="height: 50px; position: relative;top: 30px;">
+			<%--<div style="height: 50px; position: relative;top: 30px;">
 				<div>
-					<button type="button" class="btn btn-default" style="cursor: default;">共<b>50</b>条记录</button>
+					<button type="button" class="btn btn-default" style="cursor: default;">共<b id="totalRowsB">50</b>条记录</button>
 				</div>
 				<div class="btn-group" style="position: relative;top: -34px; left: 110px;">
 					<button type="button" class="btn btn-default" style="cursor: default;">显示</button>
@@ -394,7 +466,7 @@
 						</ul>
 					</nav>
 				</div>
-			</div>
+			</div>--%>
 
 		</div>
 
