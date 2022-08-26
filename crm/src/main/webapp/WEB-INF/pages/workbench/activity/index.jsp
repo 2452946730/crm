@@ -99,6 +99,20 @@
 		$("#queryBtn").click(function () {
 			queryActivityByConditionForPage(1,$("#pagination").bs_pagination("getOption","currentPage"));
 		});
+		//全选域取消全选
+		//给全选按钮添加单击事件
+		$("#checkAll").click(function () {
+			$("#activityListTBody input[type='checkbox']").prop("checked",this.checked);
+		});
+		//取消全选
+		$("#activityListTBody").on("click","input[type='checkbox']",function () {
+			/*if($("#activityListTBody input[type='checkbox']").size()==$("#activityListTBody input[type='checkbox']:checked").size()){
+				$("#checkAll").prop("checked",true);
+			}else{
+				$("#checkAll").prop("checked",false);
+			}*/
+			$("#checkAll").prop("checked",$("#activityListTBody input[type='checkbox']").size()==$("#activityListTBody input[type='checkbox']:checked").size());
+		})
 	});
 	//设置日历插件
 	function myDate(id) {
@@ -406,7 +420,7 @@
 				<table class="table table-hover">
 					<thead>
 						<tr style="color: #B3B3B3;">
-							<td><input type="checkbox" /></td>
+							<td><input type="checkbox" id="checkAll" /></td>
 							<td>名称</td>
                             <td>所有者</td>
 							<td>开始日期</td>
