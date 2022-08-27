@@ -99,7 +99,7 @@
 		$("#queryBtn").click(function () {
 			queryActivityByConditionForPage(1,$("#pagination").bs_pagination("getOption","currentPage"));
 		});
-		//全选域取消全选
+		//全选或取消全选
 		//给全选按钮添加单击事件
 		$("#checkAll").click(function () {
 			$("#activityListTBody input[type='checkbox']").prop("checked",this.checked);
@@ -112,7 +112,37 @@
 				$("#checkAll").prop("checked",false);
 			}*/
 			$("#checkAll").prop("checked",$("#activityListTBody input[type='checkbox']").size()==$("#activityListTBody input[type='checkbox']:checked").size());
-		})
+		});
+		//给删除按钮添加单击事件
+		$("#deleteActivityBtn").click(function () {
+			//收集参数
+			var checkedIds=$("#activityListTBody input[type='checkbox']:checked");
+			if(checkedIds.size()==0) {
+				alert("请选择要删除的市场活动!");
+				return;
+			}
+			if(window.confirm("确认删除吗?")){
+				var ids="";
+				$.each(checkedIds,function () {
+					ids+="id="+this.value+"&";
+				});
+				ids=ids.substr(0,ids.length-1);
+				$.ajax({
+					url:"workbench/activity/deleteActivityByIds.do",
+					data:ids,
+					type:"post",
+					dataType:"json",
+					success:function (data) {
+						if(data.code==1){
+							//刷新市场活动列表,显示第一页数据,保持每页显示条数不变
+							queryActivityByConditionForPage(1,$("#pagination").bs_pagination("getOption","currentPage"));
+						}else{
+							alert(data.message);
+						}
+					}
+				});
+			}
+		});
 	});
 	//设置日历插件
 	function myDate(id) {
@@ -161,12 +191,15 @@
 					htmlStr+="</tr>";
 				});
 				$("#activityListTBody").html(htmlStr);
+				//取消全选
+				$("#checkAll").prop("checked",false);
+
 				//计算总页数
 				var totalPages=1;
-				if(data.totalRows%pageNum ==0){
-					totalPages=data.totalRows/pageNum;
+				if(data.totalRows%pageSize ==0){
+					totalPages=data.totalRows/pageSize;
 				}else{
-					totalPages=parseInt(data.totalRows/pageNum)+1;
+					totalPages=parseInt(data.totalRows/pageSize)+1;
 				}
 				//调用工具函数,完成分页查询
 				$("#pagination").bs_pagination({
@@ -408,7 +441,7 @@
 				<div class="btn-group" style="position: relative; top: 18%;">
 				  <button type="button" class="btn btn-primary" id="createActivityBtn"><span class="glyphicon glyphicon-plus"></span> 创建</button>
 				  <button type="button" class="btn btn-default" data-toggle="modal" data-target="#editActivityModal"><span class="glyphicon glyphicon-pencil"></span> 修改</button>
-				  <button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-minus"></span> 删除</button>
+				  <button type="button" class="btn btn-danger" id="deleteActivityBtn"><span class="glyphicon glyphicon-minus" ></span> 删除</button>
 				</div>
 				<div class="btn-group" style="position: relative; top: 18%;">
                     <button type="button" class="btn btn-default" data-toggle="modal" data-target="#importActivityModal" ><span class="glyphicon glyphicon-import"></span> 上传列表数据（导入）</button>
