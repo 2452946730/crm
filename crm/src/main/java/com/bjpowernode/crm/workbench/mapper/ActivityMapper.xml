@@ -253,4 +253,45 @@
       #{id}
     </foreach>
   </delete>
+  <select id="selectActivityById" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List"/>
+    from tbl_activity
+    where id=#{id}
+  </select>
+  <update id="updateActivity" parameterType="activity">
+    update tbl_activity
+    <set>
+      <if test="owner != null and owner != '' ">
+        owner=#{owner},
+      </if>
+      <if test="name != null and name != '' ">
+        name=#{name},
+      </if>
+      <if test="startDate != null and startDate != '' ">
+        start_date=#{startDate},
+      </if>
+      <if test="endDate != null and endDate != '' ">
+        end_date=#{endDate},
+      </if>
+      <if test="cost != null and cost != '' ">
+        cost=#{cost},
+      </if>
+      <if test="description != null and description != '' ">
+        description=#{description},
+      </if>
+      <if test="createTime != null and createTime != '' ">
+        create_time=#{createTime},
+      </if>
+      <if test="createBy != null and createBy != '' ">
+        create_by=#{createBy},
+      </if>
+      <if test="editTime != null and editTime != ''">
+        edit_time= #{editTime},
+      </if>
+      <if test="editBy != null and editBy != '' ">
+        edit_by=#{editBy},
+      </if>
+    </set>
+      where id=#{id}
+  </update>
 </mapper>

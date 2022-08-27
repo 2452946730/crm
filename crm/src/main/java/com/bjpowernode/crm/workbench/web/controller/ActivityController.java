@@ -109,4 +109,35 @@ public class ActivityController {
         }
         return retObject;
     }
+
+    @RequestMapping("/workbench/activity/queryActivityById.do")
+    @ResponseBody
+    public Object queryActivityById(String id){
+        return activityService.queryActivityById(id);
+    }
+
+    @RequestMapping("/workbench/activity/updateActivity.do")
+    @ResponseBody
+    public Object updateActivity(Activity activity,HttpServletRequest request){
+        //封装参数
+        User user = (User) request.getSession().getAttribute(Contants.SYSTEM_USER);
+        activity.setEditBy(user.getId());
+        activity.setEditTime(DateUtils.formateDateTime(new Date()));
+        RetObject retObject=new RetObject();
+        try {
+            //调用service,更新数据
+            int count=activityService.updateActivity(activity);
+            if(count>0){
+                retObject.setCode(Contants.RETURN_OBJECT_CODE_SUCCESS);
+            }else{
+                retObject.setCode(Contants.RETURN_OBJECT_CODE_FAIL);
+                retObject.setMessage("系统繁忙,请稍后重试...");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            retObject.setCode(Contants.RETURN_OBJECT_CODE_FAIL);
+            retObject.setMessage("系统繁忙,请稍后重试...");
+        }
+        return retObject;
+    }
 }

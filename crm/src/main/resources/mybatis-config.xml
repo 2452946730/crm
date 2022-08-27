@@ -8,6 +8,7 @@
     </settings>
     <typeAliases>
         <package name="com.bjpowernode.crm.settings.model"/>
+        <package name="com.bjpowernode.crm.workbench.model"/>
     </typeAliases>
     <mappers>
         <package name="com.bjpowernode.crm.settings.mapper"/>
