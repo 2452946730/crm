@@ -6,14 +6,12 @@ package com.bjpowernode.crm.commons.domain;
 public class RetObject {
     private String code;
     private String message;
+    private Object date;
 
     public RetObject() {
     }
 
-    public RetObject(String code, String message) {
-        this.code = code;
-        this.message = message;
-    }
+
 
     public String getCode() {
         return code;
@@ -31,11 +29,11 @@ public class RetObject {
         this.message = message;
     }
 
-    @Override
-    public String toString() {
-        return "RetObject{" +
-                "code='" + code + '\'' +
-                ", message='" + message + '\'' +
-                '}';
+    public Object getDate() {
+        return date;
+    }
+
+    public void setDate(Object date) {
+        this.date = date;
     }
 }

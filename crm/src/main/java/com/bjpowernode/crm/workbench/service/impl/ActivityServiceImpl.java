@@ -1,8 +1,13 @@
 package com.bjpowernode.crm.workbench.service.impl;
 
+import com.bjpowernode.crm.commons.utils.HSSFUtils;
 import com.bjpowernode.crm.workbench.mapper.ActivityMapper;
 import com.bjpowernode.crm.workbench.model.Activity;
 import com.bjpowernode.crm.workbench.service.ActivityService;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -45,5 +50,22 @@ public class ActivityServiceImpl implements ActivityService {
     @Override
     public int updateActivity(Activity activity) {
         return activityMapper.updateActivity(activity);
+    }
+
+    @Override
+    public HSSFWorkbook queryAllActivity() throws Exception{
+        List<Activity> activityList=activityMapper.selectAllActivity();
+        return HSSFUtils.activityHSSF(activityList);
+    }
+
+    @Override
+    public HSSFWorkbook queryActivityByIds(String[] ids) throws Exception {
+        List<Activity> activityList=activityMapper.selectActivityByIds(ids);
+        return HSSFUtils.activityHSSF(activityList);
+    }
+
+    @Override
+    public int saveCreateActivityByList(List<Activity> activityList) {
+        return activityMapper.insertActivityByList(activityList);
     }
 }

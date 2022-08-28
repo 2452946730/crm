@@ -244,6 +244,60 @@
                 }
             });
         });
+        //批量导出市场活动
+		$("#exportActivityAllBtn").click(function () {
+			window.location.href="workbench/activity/exportActivity.do"
+		});
+		//选择导出市场活动
+		$("#exportActivityXzBtn").click(function () {
+			//获取参数
+			var checkedId=$("#activityListTBody input[type='checkbox']:checked");
+			if(checkedId.size()==0){
+				alert("请选择要导出的市场活动!");
+				return;
+			}
+			var ids="";
+			$.each(checkedId,function () {
+				ids+="id="+this.value+"&";
+			});
+			ids=ids.substr(0,ids.length-1);
+			window.location.href="workbench/activity/exportActivityByIds.do?"+ids;
+		});
+		//给导入市场的模态窗口的提交按钮添加单击事件
+		$("#importActivityBtn").click(function () {
+			//收集参数
+			var activityFileName=$("#activityFile").val();
+			if(activityFileName.substr(activityFileName.lastIndexOf(".")).toLocaleLowerCase() != ".xls"){
+				alert("仅支持.xls文件");
+				return;
+			}
+			var activityFile=$("#activityFile")[0].files[0];
+			if(activityFile.size>5*1024*1024){
+				alert("文件大小不能超过5M");
+				return;
+			}
+			var formData=new FormData();
+			formData.append("activityFile",activityFile);
+			//发送请求
+			$.ajax({
+				url:"workbench/activity/importActivityByList.do",
+				contentType:false,
+				processData:false,
+				data:formData,
+				type:"post",
+				dataType:"json",
+				success:function (data) {
+					if(data.code==1){
+						alert("更新成功"+data.date+"条数据!");
+						$("#importActivityModal").modal("hide");
+						queryActivityByConditionForPage(1,$("#pagination").bs_pagination("getOption","rowsPerPage"));
+					}else{
+						alert(data.message);
+						$("#importActivityModal").modal("show");
+					}
+				}
+			});
+		});
 	});
 	//设置日历插件
 	function myDate(id) {
