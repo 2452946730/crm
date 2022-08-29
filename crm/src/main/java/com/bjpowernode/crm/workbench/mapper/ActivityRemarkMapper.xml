@@ -167,8 +167,19 @@
   </update>
 
   <select id="selectActivityRemarkForDetailByActivityId" resultMap="BaseResultMap">
-    select id,note_content,create_time,create_by,edit_time,edit_by,edit_flag
-    from tbl_activity_remark
-    where activity_id=#{activityId}
+    select ar.id,ar.note_content,ar.create_time,u.name create_by,ar.edit_time,u2.name edit_by,ar.edit_flag
+    from tbl_activity_remark ar
+    join tbl_user u on ar.create_by=u.id
+    left join tbl_user u2 on ar.edit_by=u2.id
+    where ar.activity_id=#{activityId}
+    order by ar.create_time asc
   </select>
+  <insert id="insertActivityRemark">
+    insert into tbl_activity_remark(id,note_content,create_time,create_by,edit_flag,activity_id)
+    values(#{id},#{noteContent},#{createTime},#{createBy},#{editFlag},#{activityId})
+  </insert>
+  <delete id="deleteActivityRemarkById" parameterType="string">
+    delete from tbl_activity_remark
+    where id=#{id}
+  </delete>
 </mapper>
