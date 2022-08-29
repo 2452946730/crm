@@ -7,6 +7,8 @@ import com.bjpowernode.crm.commons.utils.UUIDUtils;
 import com.bjpowernode.crm.settings.model.User;
 import com.bjpowernode.crm.settings.service.UserService;
 import com.bjpowernode.crm.workbench.model.Activity;
+import com.bjpowernode.crm.workbench.model.ActivityRemark;
+import com.bjpowernode.crm.workbench.service.ActivityRemarkService;
 import com.bjpowernode.crm.workbench.service.ActivityService;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
@@ -34,6 +36,8 @@ public class ActivityController {
     private UserService userService;
     @Resource
     private ActivityService activityService;
+    @Resource
+    private ActivityRemarkService activityRemarkService;
 
     @RequestMapping("/workbench/activity/index.do")
     public String index(HttpServletRequest request){
@@ -234,5 +238,15 @@ public class ActivityController {
             retObject.setMessage("系统忙,请稍后重试....");
         }
         return retObject;
+    }
+
+    @RequestMapping("/workbench/activity/queryActivityForDetailById.do")
+    public String queryActivityForDetailById(String id,HttpServletRequest request){
+        //调用service处理业务
+        Activity activity=activityService.queryActivityForDetailById(id);
+        List<ActivityRemark> activityRemarkList=activityRemarkService.queryActivityRemarkForDetailByActivityId(id);
+        request.setAttribute("activity",activity);
+        request.setAttribute("activityRemarkList",activityRemarkList);
+        return "workbench/activity/detail";
     }
 }

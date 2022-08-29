@@ -3,7 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/crm/crm.iml" filepath="$PROJECT_DIR$/crm/crm.iml" />
-      <module fileurl="file://$PROJECT_DIR$/crm-project.iml" filepath="$PROJECT_DIR$/crm-project.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mybatis-generator/mybatis-generator.iml" filepath="$PROJECT_DIR$/mybatis-generator/mybatis-generator.iml" />
     </modules>
   </component>
 </project>

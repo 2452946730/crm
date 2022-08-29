@@ -19,4 +19,5 @@ public interface ActivityService {
     HSSFWorkbook queryAllActivity() throws Exception;
     HSSFWorkbook queryActivityByIds(String[] ids) throws Exception;
     int saveCreateActivityByList(List<Activity> activityList);
+    Activity queryActivityForDetailById(String id);
 }
