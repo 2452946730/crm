@@ -1,0 +1,23 @@
+package com.bjpowernode.crm.workbench.service.impl;
+
+import com.bjpowernode.crm.workbench.mapper.ActivityRemarkMapper;
+import com.bjpowernode.crm.workbench.model.ActivityRemark;
+import com.bjpowernode.crm.workbench.service.ActivityRemarkService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+/**
+ * @Date 2022/8/29 17:04
+ */
+@Service
+public class ActivityRemarkServiceImpl implements ActivityRemarkService {
+    @Autowired
+    private ActivityRemarkMapper activityRemarkMapper;
+
+    @Override
+    public List<ActivityRemark> queryActivityRemarkForDetailByActivityId(String activityId) {
+        return activityRemarkMapper.selectActivityRemarkForDetailByActivityId(activityId);
+    }
+}
