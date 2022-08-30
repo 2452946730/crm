@@ -124,6 +124,46 @@
 				}
 			});
 		});
+		//弹出修改市场活动备注的模态窗口
+		$("#remarkListDiv").on("click","a[name='editA']",function (){
+			//获取参数
+			var id=$(this).attr("remarkId");
+			var noteContent=$("#div_"+id+" h5").text();
+			$("#edit-id").val(id);
+			$("#edit-noteContent").val(noteContent);
+			//弹出模态窗口
+			$("#editRemarkModal").modal("show");
+		});
+		//给更新按钮添加单击事件
+		$("#updateRemarkBtn").click(function (){
+			let id=$("#edit-id").val();
+			var noteContent=$("#edit-noteContent").val();
+			if(noteContent == ""){
+				alert("备注内容不能为空!");
+				return;
+			}
+			$.ajax({
+				url:"workbench/activity/saveEditActivityRemark.do",
+				data:{
+					id:id,
+					noteContent:noteContent
+				},
+				type:"post",
+				dataType:"json",
+				success:function (data) {
+					if(data.code==1){
+						//关闭模态窗口,
+						$("#editRemarkModal").modal("hide");
+						// 刷新备注列表
+						$("#div_"+id+" h5").text(data.date.noteContent);
+						$("#div_"+data.date.id+" small").text(" "+data.date.editTime+" 由${sessionScope.sessionUser.name}修改");
+					}else{
+						alert(data.message);
+						$("#editRemarkModal").modal("show");
+					}
+				}
+			});
+		});
 	});
 
 </script>
@@ -144,11 +184,12 @@
                     <h4 class="modal-title" id="myModalLabel">修改备注</h4>
                 </div>
                 <div class="modal-body">
+					<input type="hidden" id="edit-id">
                     <form class="form-horizontal" role="form">
                         <div class="form-group">
-                            <label for="noteContent" class="col-sm-2 control-label">内容</label>
+                            <label for="edit-noteContent" class="col-sm-2 control-label">内容</label>
                             <div class="col-sm-10" style="width: 81%;">
-                                <textarea class="form-control" rows="3" id="noteContent"></textarea>
+                                <textarea class="form-control" rows="3" id="edit-noteContent"></textarea>
                             </div>
                         </div>
                     </form>

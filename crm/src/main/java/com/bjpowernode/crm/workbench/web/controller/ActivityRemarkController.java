@@ -72,4 +72,31 @@ public class ActivityRemarkController {
         }
         return retObject;
     }
+
+    @RequestMapping("/workbench/activity/saveEditActivityRemark.do")
+    @ResponseBody
+    public Object saveEditActivityRemark(ActivityRemark remark,HttpSession session){
+        User user= (User) session.getAttribute(Contants.SYSTEM_USER);
+        //封装参数
+        remark.setEditBy(user.getId());
+        remark.setEditTime(DateUtils.formateDateTime(new Date()));
+        remark.setEditFlag(Contants.REMARK_EDIT_FLAG_YES);
+        RetObject retObject=new RetObject();
+        try {
+            //调用service
+            int ret=activityRemarkService.saveEditActivityRemark(remark);
+            if(ret>0){
+                retObject.setCode(Contants.RETURN_OBJECT_CODE_SUCCESS);
+                retObject.setDate(remark);
+            }else{
+                retObject.setCode(Contants.RETURN_OBJECT_CODE_FAIL);
+                retObject.setMessage("系统忙,请稍后重试....");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            retObject.setCode(Contants.RETURN_OBJECT_CODE_FAIL);
+            retObject.setMessage("系统忙,请稍后重试....");
+        }
+        return retObject;
+    }
 }
