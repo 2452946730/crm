@@ -34,6 +34,10 @@
 		myDate($("#create-nextContactTime"));
 		//更新的初始化
 		myDate($("#edit-nextContactTime"));
+		//给查询按钮添加单击事件
+		$("#queryClue").click(function () {
+			queryClueByConditionForPage(1,$("#pagination").bs_pagination("getOption","rowsPerPage"))
+		});
 		//给创建按钮添加单击事件
 		$("#createClueBtn").click(function (){
 			//初始化
@@ -402,6 +406,7 @@
 						queryClueByConditionForPage(pageObj.currentPage,pageObj.rowsPerPage);
 					}
 				});
+				//页面刷新取消全选
 				$("#checked-all").prop("checked",false);
 			}
 		});
@@ -772,7 +777,7 @@
 				    </div>
 				  </div>
 
-				  <button type="submit" class="btn btn-default">查询</button>
+				  <button type="button" class="btn btn-default" id="queryClue">查询</button>
 
 				</form>
 			</div>

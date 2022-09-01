@@ -350,25 +350,25 @@
     from tbl_clue
     <where>
       <if test="fullname != null and fullname != '' ">
-        and c.fullname like concat('%',#{fullname},'%')
+        and fullname like concat('%',#{fullname},'%')
       </if>
       <if test="company != null and company != '' ">
-        and c.company like concat('%',#{company},'%')
+        and company like concat('%',#{company},'%')
       </if>
       <if test="mphone != null and mphone != '' ">
-        and c.mphone like concat('%',#{mphone},'%')
+        and mphone like concat('%',#{mphone},'%')
       </if>
       <if test="source != null and source != '' ">
-        c.source =#{source}
+        source =#{source}
       </if>
       <if test="owner != null and owner != '' ">
         and owner like concat('%',#{owner},'%')
       </if>
       <if test="phone != null and phone != '' ">
-        and c.phone like concat('%',#{phone},'%')
+        and phone like concat('%',#{phone},'%')
       </if>
       <if test="state != null and state != '' ">
-        and c.state=#{state}
+        and state=#{state}
       </if>
     </where>
   </select>
