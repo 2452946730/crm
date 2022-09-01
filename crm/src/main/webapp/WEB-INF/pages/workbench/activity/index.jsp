@@ -106,7 +106,8 @@
 		});
 		//取消全选
 		$("#activityListTBody").on("click","input[type='checkbox']",function () {
-			/*if($("#activityListTBody input[type='checkbox']").size()==$("#activityListTBody input[type='checkbox']:checked").size()){
+			/*
+			if($("#activityListTBody input[type='checkbox']").size()==$("#activityListTBody input[type='checkbox']:checked").size()){
 				$("#checkAll").prop("checked",true);
 			}else{
 				$("#checkAll").prop("checked",false);
@@ -334,7 +335,7 @@
 			type:"post",
 			dataType:"json",
 			success:function(data){
-				$("#totalRowsB").html(data.totalRows);
+				//$("#totalRowsB").html(data.totalRows);
 				var htmlStr='';
 				$.each(data.activityList,function (index, obj) {
 					htmlStr+="<tr class=\"active\">";

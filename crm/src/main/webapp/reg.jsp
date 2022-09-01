@@ -13,7 +13,7 @@
         $(function (){
             var regEmail=/^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
             var regPhone=/^(13[0-9]|14[5|7]|15[0|1|2|3|5|6|7|8|9]|18[0|1|2|3|5|6|7|8|9])\d{8}$/;
-            var regMphone=/\d{3}-\d{8}|\d{4}-\d{7}/;
+            var regMphone=/\d{3}-\d{8}|\d{4}-\d{7}|\d{7,8}/;
             $("#btn").click(function () {
                 var email=$("#email").val();
                 var phone=$("#phone").val();
