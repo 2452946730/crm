@@ -148,4 +148,10 @@ public class ClueController {
         }
         return retObject;
     }
+
+    @RequestMapping("/workbench/clue/queryClueById.do")
+    public String queryClueById(String id,HttpServletRequest request){
+        request.setAttribute("clue",clueService.queryClueById(id));
+        return "workbench/clue/detail";
+    }
 }
