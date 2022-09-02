@@ -9,6 +9,7 @@ import com.bjpowernode.crm.settings.model.User;
 import com.bjpowernode.crm.settings.service.DicValueService;
 import com.bjpowernode.crm.settings.service.UserService;
 import com.bjpowernode.crm.workbench.model.Clue;
+import com.bjpowernode.crm.workbench.service.ClueRemarkService;
 import com.bjpowernode.crm.workbench.service.ClueService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -28,12 +29,14 @@ import java.util.Map;
  */
 @Controller
 public class ClueController {
-    @Autowired
+    @Resource
     private UserService userService;
-    @Autowired
+    @Resource
     private DicValueService dicValueService;
     @Resource
     private ClueService clueService;
+    @Resource
+    private ClueRemarkService remarkService;
 
     @RequestMapping("/workbench/clue/index.do")
     public String index(HttpServletRequest request){
@@ -152,6 +155,7 @@ public class ClueController {
     @RequestMapping("/workbench/clue/queryClueById.do")
     public String queryClueById(String id,HttpServletRequest request){
         request.setAttribute("clue",clueService.queryClueById(id));
+        request.setAttribute("remarkList",remarkService.queryAllRemark());
         return "workbench/clue/detail";
     }
 }

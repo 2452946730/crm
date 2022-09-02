@@ -1,4 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%
 	String basePath=request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+request.getContextPath()+"/";
 %>
@@ -36,20 +37,97 @@
 			cancelAndSaveBtnDefault = true;
 		});
 
-		$(".remarkDiv").mouseover(function(){
+		/*$(".remarkDiv").mouseover(function(){
 			$(this).children("div").children("div").show();
-		});
+		});*/
+		$("#clueRemark").on("mouseover",".remarkDiv",function () {
+			$(this).children("div").children("div").show();
+		})
 
-		$(".remarkDiv").mouseout(function(){
+		/*$(".remarkDiv").mouseout(function(){
 			$(this).children("div").children("div").hide();
-		});
+		});*/
+		$("#clueRemark").on("mouseout",".remarkDiv",function () {
+			$(this).children("div").children("div").hide();
+		})
 
-		$(".myHref").mouseover(function(){
+		/*$(".myHref").mouseover(function(){
 			$(this).children("span").css("color","red");
-		});
+		});*/
+		$("#clueRemark").on("mouseover",".myHref",function () {
+			$(this).children("span").css("color","red");
+		})
 
-		$(".myHref").mouseout(function(){
+		/*$(".myHref").mouseout(function(){
 			$(this).children("span").css("color","#E6E6E6");
+		});*/
+		$("#clueRemark").on("mouseout",".myHref",function () {
+			$(this).children("span").css("color","#E6E6E6");
+		})
+		//给保存按钮添加单击事件
+		$("#saveCreateClueRemarkBtn").click(function () {
+			//收集参数
+			var noteContent=$("#remark").val();
+			var clueId="${clue.id}";
+			//表单验证
+			if(noteContent == ""){
+				alert("请输入备注")
+				return;
+			}
+			//发送数据
+			$.ajax({
+				url:"workbench/clue/saveCreateClueRemark.do",
+				data:{
+					noteContent:noteContent,
+					clueId:clueId
+				},
+				type:"post",
+				dataType:"json",
+				success:function (data) {
+					if(data.code==1){
+						//清空输入框,刷新备注列表
+						$("#remark").val("");
+						var str="";
+						str+="<div id=\"div_"+data.date.id+"\" class=\"remarkDiv\" style=\"height: 60px;\">";
+						str+="<img title=\"${clue.owner}\" src=\"image/user-thumbnail.png\" style=\"width: 30px; height:30px;\">";
+						str+="<div style=\"position: relative; top: -40px; left: 40px;\" >";
+						str+="<h5>"+noteContent+"</h5>";
+						str+="<font color=\"gray\">线索</font> <font color=\"gray\">-</font> <b>${clue.fullname}${clue.appellation}-${clue.company}</b> <small style=\"color: gray;\"> "+data.date.createTime+" 由${clue.owner}创建</small>";
+						str+="<div style=\"position: relative; left: 500px; top: -30px; height: 30px; width: 100px; display: none;\">";
+						str+="<a class=\"myHref\" href=\"javascript:void(0);\"><span class=\"glyphicon glyphicon-edit\" style=\"font-size: 20px; color: #E6E6E6;\"></span></a>";
+						str+="&nbsp;&nbsp;&nbsp;&nbsp;";
+						str+="<a class=\"myHref\" name=\"deleteA\" remarkId=\""+data.date.id+"\" href=\"javascript:void(0);\"><span class=\"glyphicon glyphicon-remove\" style=\"font-size: 20px; color: #E6E6E6;\"></span></a>";
+						str+="</div>";
+						str+="</div>";
+						str+="</div>";
+
+						$("#remarkDiv").before(str);
+					}else{
+						//打印信息
+						alert(data.message);
+					}
+				}
+			});
+		});
+		//删除备注
+		$("#clueRemark").on("click","a[name='deleteA']",function () {
+			var id=$(this).attr("remarkId");
+			$.ajax({
+				url:"workbench/clue/deleteClueRemarkById.do",
+				data:{
+					id:id
+				},
+				type:"post",
+				dataType:"json",
+				success:function (data) {
+					if(data.code==1){
+						//刷新备注列表
+						$("#div_"+id).remove();
+					}else{
+						alert(data.message);
+					}
+				}
+			});
 		});
 	});
 
@@ -222,13 +300,27 @@
 	</div>
 
 	<!-- 备注 -->
-	<div style="position: relative; top: 40px; left: 40px;">
+	<div id="clueRemark" style="position: relative; top: 40px; left: 40px;">
 		<div class="page-header">
 			<h4>备注</h4>
 		</div>
+		<c:forEach items="${remarkList}" var="re" >
+			<div id="div_${re.id}" class="remarkDiv" style="height: 60px;">
+				<img title="${clue.owner}" src="image/user-thumbnail.png" style="width: 30px; height:30px;">
+				<div style="position: relative; top: -40px; left: 40px;" >
+					<h5>${re.noteContent}</h5>
+					<font color="gray">线索</font> <font color="gray">-</font> <b>${clue.fullname}${clue.appellation}-${clue.company}</b> <small style="color: gray;"> ${re.editFlag==0?re.createBy:re.editBy} 由${re.editFlag==0?re.createTime:re.editTime}${re.editFlag==0?"创建":"修改"}</small>
+					<div style="position: relative; left: 500px; top: -30px; height: 30px; width: 100px; display: none;">
+						<a class="myHref" href="javascript:void(0);"><span class="glyphicon glyphicon-edit" style="font-size: 20px; color: #E6E6E6;"></span></a>
+						&nbsp;&nbsp;&nbsp;&nbsp;
+						<a class="myHref" name="deleteA" remarkId="${re.id}" href="javascript:void(0);"><span class="glyphicon glyphicon-remove" style="font-size: 20px; color: #E6E6E6;"></span></a>
+					</div>
+				</div>
+			</div>
+		</c:forEach>
 
 		<!-- 备注1 -->
-		<div class="remarkDiv" style="height: 60px;">
+		<%--<div class="remarkDiv" style="height: 60px;">
 			<img title="zhangsan" src="image/user-thumbnail.png" style="width: 30px; height:30px;">
 			<div style="position: relative; top: -40px; left: 40px;" >
 				<h5>哎呦！</h5>
@@ -253,14 +345,14 @@
 					<a class="myHref" href="javascript:void(0);"><span class="glyphicon glyphicon-remove" style="font-size: 20px; color: #E6E6E6;"></span></a>
 				</div>
 			</div>
-		</div>
+		</div>--%>
 
 		<div id="remarkDiv" style="background-color: #E6E6E6; width: 870px; height: 90px;">
 			<form role="form" style="position: relative;top: 10px; left: 10px;">
 				<textarea id="remark" class="form-control" style="width: 850px; resize : none;" rows="2"  placeholder="添加备注..."></textarea>
 				<p id="cancelAndSaveBtn" style="position: relative;left: 737px; top: 10px; display: none;">
 					<button id="cancelBtn" type="button" class="btn btn-default">取消</button>
-					<button type="button" class="btn btn-primary">保存</button>
+					<button type="button" class="btn btn-primary" id="saveCreateClueRemarkBtn">保存</button>
 				</p>
 			</form>
 		</div>
