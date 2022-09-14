@@ -8,6 +8,7 @@ import com.bjpowernode.crm.settings.model.User;
 import com.bjpowernode.crm.workbench.model.ClueRemark;
 import com.bjpowernode.crm.workbench.service.ClueRemarkService;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -53,14 +54,14 @@ public class ClueRemarkController {
 
     @RequestMapping("/workbench/clue/deleteClueRemarkById.do")
     @ResponseBody
-    public Object deleteClueRemarkById(String id){
-        RetObject retObject=new RetObject();
+    public Object deleteClueRemarkById(String id) {
+        RetObject retObject = new RetObject();
         try {
             //调用service
-            int ret=remarkService.deleteClueRemarkById(id);
-            if(ret>0){
+            int ret = remarkService.deleteClueRemarkById(id);
+            if (ret > 0) {
                 retObject.setCode(Contants.RETURN_OBJECT_CODE_SUCCESS);
-            }else{
+            } else {
                 retObject.setCode(Contants.RETURN_OBJECT_CODE_FAIL);
                 retObject.setMessage("系统忙,请稍后重试...");
             }
@@ -68,6 +69,34 @@ public class ClueRemarkController {
             e.printStackTrace();
             retObject.setCode(Contants.RETURN_OBJECT_CODE_FAIL);
             retObject.setMessage("系统忙,请稍后重试...");
+        }
+        return retObject;
+    }
+
+    @PostMapping("/workbench/clue/updateClueRemarkById.do")
+    @ResponseBody
+    public Object updateClueRemarkById(ClueRemark clueRemark, HttpSession session) {
+        RetObject retObject = new RetObject();
+        //封装参数
+        User user = (User) session.getAttribute(Contants.SYSTEM_USER);
+        clueRemark.setEditBy(user.getId());
+        clueRemark.setEditFlag(Contants.REMARK_EDIT_FLAG_YES);
+        clueRemark.setEditTime(DateUtils.formateDateTime(new Date()));
+        try {
+            //调用service
+            int result = remarkService.updateClueRemarkById(clueRemark);
+            //处理结果
+            if (result > 0) {
+                retObject.setCode(Contants.RETURN_OBJECT_CODE_SUCCESS);
+                retObject.setDate(clueRemark);
+            } else {
+                retObject.setCode(Contants.RETURN_OBJECT_CODE_FAIL);
+                retObject.setMessage("系统忙,请稍后重试....");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            retObject.setCode(Contants.RETURN_OBJECT_CODE_FAIL);
+            retObject.setMessage("系统忙,请稍后重试....");
         }
         return retObject;
     }

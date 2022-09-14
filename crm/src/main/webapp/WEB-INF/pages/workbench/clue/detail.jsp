@@ -94,7 +94,7 @@
 						str+="<h5>"+noteContent+"</h5>";
 						str+="<font color=\"gray\">线索</font> <font color=\"gray\">-</font> <b>${clue.fullname}${clue.appellation}-${clue.company}</b> <small style=\"color: gray;\"> "+data.date.createTime+" 由${clue.owner}创建</small>";
 						str+="<div style=\"position: relative; left: 500px; top: -30px; height: 30px; width: 100px; display: none;\">";
-						str+="<a class=\"myHref\" href=\"javascript:void(0);\"><span class=\"glyphicon glyphicon-edit\" style=\"font-size: 20px; color: #E6E6E6;\"></span></a>";
+						str+="<a class=\"myHref\" name=\"editA\" remarkId=\""+data.date.id+"\" href=\"javascript:void(0);\"><span class=\"glyphicon glyphicon-edit\" style=\"font-size: 20px; color: #E6E6E6;\"></span></a>";
 						str+="&nbsp;&nbsp;&nbsp;&nbsp;";
 						str+="<a class=\"myHref\" name=\"deleteA\" remarkId=\""+data.date.id+"\" href=\"javascript:void(0);\"><span class=\"glyphicon glyphicon-remove\" style=\"font-size: 20px; color: #E6E6E6;\"></span></a>";
 						str+="</div>";
@@ -129,12 +129,83 @@
 				}
 			});
 		});
+		//修改线索的备注
+		$("#clueRemark").on("click","a[name='editA']",function () {
+			//收集参数
+			let id = $(this).attr("remarkId");
+			$("#edit-id").val(id);
+			$("#edit-noteContent").val($("#div_"+id+" h5").text());
+			//弹出模态窗口
+			$("#editRemarkModal").modal("show");
+			//给更新按钮添加单击事件
+			$("#updateRemarkBtn").click(function () {
+				let id = $("#edit-id").val();
+				let noteContent = $("#edit-noteContent").val();
+				if(!noteContent){
+					alert("备注不能为空!")
+					return;
+				}
+				//发送请求
+				$.ajax({
+					url:"workbench/clue/updateClueRemarkById.do",
+					data:{
+						id:id,
+						noteContent:noteContent
+					},
+					type:"post",
+					dataType:"json",
+					success:function (data) {
+						if(data.code == 1){
+							//关闭模态窗口
+							$("#editRemarkModal").modal("hide");
+							//刷新备注列表
+							$("#div_"+id+" h5").text(data.date.noteContent);
+							$("#div_"+id+" small").text(" "+data.date.editTime+" 由${sessionScope.sessionUser.name}修改")
+						} else {
+							//打印信息
+							//模态窗口不关闭
+							$("#editRemarkModal").modal("show");
+						}
+					}
+				});
+			});
+		});
 	});
 
 </script>
 
 </head>
 <body>
+<!-- 修改线索备注的模态窗口 -->
+<div class="modal fade" id="editRemarkModal" role="dialog">
+	<%-- 备注的id --%>
+	<input type="hidden" id="remarkId">
+	<div class="modal-dialog" role="document" style="width: 40%;">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">
+					<span aria-hidden="true">×</span>
+				</button>
+				<h4 class="modal-title" id="myModalLabel">修改备注</h4>
+			</div>
+			<div class="modal-body">
+				<input type="hidden" id="edit-id">
+				<form class="form-horizontal" role="form">
+					<div class="form-group">
+						<label for="edit-noteContent" class="col-sm-2 control-label">内容</label>
+						<div class="col-sm-10" style="width: 81%;">
+							<textarea class="form-control" rows="3" id="edit-noteContent"></textarea>
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+				<button type="button" class="btn btn-primary" id="updateRemarkBtn">更新</button>
+			</div>
+		</div>
+	</div>
+</div>
 
 	<!-- 关联市场活动的模态窗口 -->
 	<div class="modal fade" id="bundModal" role="dialog">
@@ -311,7 +382,7 @@
 					<h5>${re.noteContent}</h5>
 					<font color="gray">线索</font> <font color="gray">-</font> <b>${clue.fullname}${clue.appellation}-${clue.company}</b> <small style="color: gray;"> ${re.editFlag==0?re.createBy:re.editBy} 由${re.editFlag==0?re.createTime:re.editTime}${re.editFlag==0?"创建":"修改"}</small>
 					<div style="position: relative; left: 500px; top: -30px; height: 30px; width: 100px; display: none;">
-						<a class="myHref" href="javascript:void(0);"><span class="glyphicon glyphicon-edit" style="font-size: 20px; color: #E6E6E6;"></span></a>
+						<a class="myHref" name="editA" remarkId="${re.id}" href="javascript:void(0);"><span class="glyphicon glyphicon-edit" style="font-size: 20px; color: #E6E6E6;"></span></a>
 						&nbsp;&nbsp;&nbsp;&nbsp;
 						<a class="myHref" name="deleteA" remarkId="${re.id}" href="javascript:void(0);"><span class="glyphicon glyphicon-remove" style="font-size: 20px; color: #E6E6E6;"></span></a>
 					</div>
