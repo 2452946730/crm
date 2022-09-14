@@ -170,6 +170,88 @@
 				});
 			});
 		});
+		//给关联市场活动按钮添加单击事件
+		$("#relationalA").click(function () {
+			//初始化
+			//将文本框和表格清空
+			$("#activityName").val("");
+			$("#tBody").html("");
+			//弹出模态窗口
+			$("#bundModal").modal("show");
+			$("#activityName").keyup(function (){
+				//收集参数
+				let clueId = "${clue.id}"
+				let activityName = $("#activityName").val();
+					//发送请求
+				$.ajax({
+					url:"workbench/clue/queryActivityByNameClueId.do",
+					data:{
+						clueId:clueId,
+						activityName:activityName
+					},
+					type:"post",
+					dataType:"json",
+					success:function (data){
+						let str = "";
+						$.each(data,function (index, obj) {
+							str+="<tr>";
+							str+="<td><input value=\""+obj.id+"\"  type=\"checkbox\"/></td>";
+							str+="<td>"+obj.name+"</td>";
+							str+="<td>"+obj.startDate+"</td>";
+							str+="<td>"+obj.endDate+"</td>";
+							str+="	<td>"+obj.owner+"</td>";
+							str+="</tr>";
+						})
+						$("#tBody").html(str);
+					}
+				});
+			});
+		});
+		//给关联按钮添加单价事件
+		$("#saveRelationBtn").click(function () {
+			//初始化
+			//收集参数
+			let activityIds = $("#tBody input[type='checkbox']:checked");
+			let clueId = "${clue.id}"
+			//表单验证
+			if(activityIds.size == 0){
+				alert("请选择要关联的市场活动")
+				return;
+			}
+			let ids="";
+			$.each(activityIds,function () {
+				ids+="activityId="+this.value+"&";
+			})
+			ids+="clueId="+clueId;
+			//发送请求
+			$.ajax({
+				url:"workbench/clue/saveBound.do",
+				data:ids,
+				type:"post",
+				dataType:"json",
+				success:function (data){
+					if(data.code == 1){
+						//关闭模态窗口,
+						$("#bundModal").modal("hide");
+						//刷新已经关联过的市场活动列表
+						let str = "";
+						$.each(data.date,function (index, obj) {
+							str+="<tr>";
+							str+="<td>"+obj.name+"</td>";
+							str+="<td>"+obj.startDate+"</td>";
+							str+="<td>"+obj.endDate+"</td>";
+							str+="<td>"+obj.owner+"</td>";
+							str+="<td><a href=\"javascript:void(0);\" activityId=\""+obj.id+"\"  style=\"text-decoration: none;\"><span class=\"glyphicon glyphicon-remove\"></span>解除关联</a></td>";
+							str+="</tr>";
+						})
+						$("#tBody2").append(str);
+					} else {
+						alert(data.message);
+						$("#bundModal").modal("show");
+					}
+				}
+			});
+		});
 	});
 
 </script>
@@ -221,7 +303,7 @@
 					<div class="btn-group" style="position: relative; top: 18%; left: 8px;">
 						<form class="form-inline" role="form">
 						  <div class="form-group has-feedback">
-						    <input type="text" class="form-control" style="width: 300px;" placeholder="请输入市场活动名称，支持模糊查询">
+						    <input type="text" id="activityName" class="form-control" style="width: 300px;" placeholder="请输入市场活动名称，支持模糊查询">
 						    <span class="glyphicon glyphicon-search form-control-feedback"></span>
 						  </div>
 						</form>
@@ -237,8 +319,8 @@
 								<td></td>
 							</tr>
 						</thead>
-						<tbody>
-							<tr>
+						<tbody id="tBody">
+							<%--<tr>
 								<td><input type="checkbox"/></td>
 								<td>发传单</td>
 								<td>2020-10-10</td>
@@ -251,13 +333,13 @@
 								<td>2020-10-10</td>
 								<td>2020-10-20</td>
 								<td>zhangsan</td>
-							</tr>
+							</tr>--%>
 						</tbody>
 					</table>
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-					<button type="button" class="btn btn-primary" data-dismiss="modal">关联</button>
+					<button type="button" class="btn btn-primary" id="saveRelationBtn">关联</button>
 				</div>
 			</div>
 		</div>
@@ -446,8 +528,17 @@
 							<td></td>
 						</tr>
 					</thead>
-					<tbody>
+					<tbody id="tBody2">
+					<c:forEach items="${activityList}" var="act">
 						<tr>
+							<td>${act.name}</td>
+							<td>${act.startDate}</td>
+							<td>${act.endDate}</td>
+							<td>${act.owner}</td>
+							<td><a href="javascript:void(0);" activityId="${act.id}"  style="text-decoration: none;"><span class="glyphicon glyphicon-remove"></span>解除关联</a></td>
+						</tr>
+					</c:forEach>
+						<%--<tr>
 							<td>发传单</td>
 							<td>2020-10-10</td>
 							<td>2020-10-20</td>
@@ -460,13 +551,13 @@
 							<td>2020-10-20</td>
 							<td>zhangsan</td>
 							<td><a href="javascript:void(0);"  style="text-decoration: none;"><span class="glyphicon glyphicon-remove"></span>解除关联</a></td>
-						</tr>
+						</tr>--%>
 					</tbody>
 				</table>
 			</div>
 
 			<div>
-				<a href="javascript:void(0);" data-toggle="modal" data-target="#bundModal" style="text-decoration: none;"><span class="glyphicon glyphicon-plus"></span>关联市场活动</a>
+				<a href="javascript:void(0);" id="relationalA" style="text-decoration: none;"><span class="glyphicon glyphicon-plus"></span>关联市场活动</a>
 			</div>
 		</div>
 	</div>

@@ -8,7 +8,7 @@ import java.util.List;
  * @Date 2022/9/2 20:02
  */
 public interface ClueRemarkService {
-    List<ClueRemark> queryAllRemark();
+    List<ClueRemark> queryRemarkByClueId(String clueId);
     int saveCreateClueRemark(ClueRemark remark);
     int deleteClueRemarkById(String id);
     int updateClueRemarkById(ClueRemark clueRemark);

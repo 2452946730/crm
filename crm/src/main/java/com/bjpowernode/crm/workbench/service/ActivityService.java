@@ -20,4 +20,7 @@ public interface ActivityService {
     HSSFWorkbook queryActivityByIds(String[] ids) throws Exception;
     int saveCreateActivityByList(List<Activity> activityList);
     Activity queryActivityForDetailById(String id);
+    List<Activity> queryActivityByClueId(String clueId);
+    List<Activity> queryActivityByNameClueId(Map map);
+    List<Activity> queryActivityForDetailByIds(String[] activityId);
 }

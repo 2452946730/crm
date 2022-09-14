@@ -54,10 +54,10 @@ public interface ClueRemarkMapper {
     int updateByPrimaryKey(ClueRemark record);
 
     /**
-     * 查询所有的备注
+     * 根据线索id查询所有的备注
      * @return
      */
-    List<ClueRemark> selectAllRemark();
+    List<ClueRemark> selectRemarkByClueId(String ClueId);
 
     /**
      * 添加线索备注

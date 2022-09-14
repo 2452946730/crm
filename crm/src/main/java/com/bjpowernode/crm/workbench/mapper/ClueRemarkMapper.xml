@@ -165,11 +165,12 @@
       clue_id = #{clueId,jdbcType=CHAR}
     where id = #{id,jdbcType=CHAR}
   </update>
-  <select id="selectAllRemark" resultMap="BaseResultMap">
+  <select id="selectRemarkByClueId" resultMap="BaseResultMap">
     select cr.id,cr.note_content,u1.name create_by,cr.create_time,u2.name edit_by,cr.edit_time,cr.edit_flag,cr.clue_id
     from tbl_clue_remark cr
     join tbl_user u1 on cr.create_by=u1.id
     left join tbl_user u2 on cr.edit_by=u2.id
+    where cr.clue_id = #{clueId}
     order by cr.create_time asc
   </select>
   <insert id="insertClueRemark" parameterType="clueRemark">
