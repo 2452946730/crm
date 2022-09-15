@@ -252,6 +252,13 @@
 				}
 			});
 		});
+		//添加关联市场活动模态窗口的全选和取消全选
+		$("#checkedAll").click(function () {
+			$("#tBody input[type='checkbox']").prop("checked",this.checked);
+		});
+		$("#tBody").on("click","input[type='checkbox']",function () {
+			$("#checkedAll").prop("checked",$("#tBody input[type='checkbox']").size() == $("#tBody input[type='checkbox']:checked").size())
+		});
 		//给解除关联按钮添加单击事件
 		$("#tBody2").on("click","a",function () {
 			//收集参数
@@ -336,7 +343,7 @@
 					<table id="activityTable" class="table table-hover" style="width: 900px; position: relative;top: 10px;">
 						<thead>
 							<tr style="color: #B3B3B3;">
-								<td><input type="checkbox"/></td>
+								<td><input id="checkedAll" type="checkbox"/></td>
 								<td>名称</td>
 								<td>开始日期</td>
 								<td>结束日期</td>
