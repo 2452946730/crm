@@ -116,4 +116,9 @@
       (#{obj.id},#{obj.activityId},#{obj.clueId})
     </foreach>
   </insert>
+
+  <delete id="deleteClueActivityByClueIdAndActivityId" parameterType="clueActivityRelation">
+    delete from crm.tbl_clue_activity_relation
+    where clue_id = #{clueId} and activity_id = #{activityId}
+  </delete>
 </mapper>

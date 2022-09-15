@@ -16,6 +16,7 @@ import com.bjpowernode.crm.workbench.service.ClueActivityRelationService;
 import com.bjpowernode.crm.workbench.service.ClueRemarkService;
 import com.bjpowernode.crm.workbench.service.ClueService;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -201,6 +202,26 @@ public class ClueController {
             e.printStackTrace();
             retObject.setCode(Contants.RETURN_OBJECT_CODE_FAIL);
             retObject.setMessage("系统忙,请稍后重试.....");
+        }
+        return retObject;
+    }
+
+    @PostMapping("/workbench/clue/saveUnBound.do")
+    @ResponseBody
+    public Object saveUnBound(ClueActivityRelation relation){
+        RetObject retObject = new RetObject();
+        try {
+            int result = clueActivityRelationService.deleteClueActivityByClueIdAndActivityId(relation);
+            if (result > 0){
+                retObject.setCode(Contants.RETURN_OBJECT_CODE_SUCCESS);
+            } else {
+                retObject.setCode(Contants.RETURN_OBJECT_CODE_FAIL);
+                retObject.setMessage("系统忙,请稍后重试....");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            retObject.setCode(Contants.RETURN_OBJECT_CODE_FAIL);
+            retObject.setMessage("系统忙,请稍后重试....");
         }
         return retObject;
     }

@@ -236,7 +236,7 @@
 						//刷新已经关联过的市场活动列表
 						let str = "";
 						$.each(data.date,function (index, obj) {
-							str+="<tr>";
+							str+="<tr id=\"tr_"+obj.id+"\">";
 							str+="<td>"+obj.name+"</td>";
 							str+="<td>"+obj.startDate+"</td>";
 							str+="<td>"+obj.endDate+"</td>";
@@ -252,6 +252,31 @@
 				}
 			});
 		});
+		//给解除关联按钮添加单击事件
+		$("#tBody2").on("click","a",function () {
+			//收集参数
+			let activityId = $(this).attr("activityId");
+			let clueId = "${clue.id}";
+			if(window.confirm("确认删除吗?")){
+				//发送请求
+				$.ajax({
+					url:"workbench/clue/saveUnBound.do",
+					data:{
+						activityId:activityId,
+						clueId:clueId
+					},
+					type:"post",
+					dataType:"json",
+					success:function (data) {
+						if(data.code == 1){
+							$("#tr_"+activityId).remove();
+						} else {
+							alert(data.message);
+						}
+					}
+				});
+			}
+		})
 	});
 
 </script>
@@ -530,7 +555,7 @@
 					</thead>
 					<tbody id="tBody2">
 					<c:forEach items="${activityList}" var="act">
-						<tr>
+						<tr id="tr_${act.id}">
 							<td>${act.name}</td>
 							<td>${act.startDate}</td>
 							<td>${act.endDate}</td>
