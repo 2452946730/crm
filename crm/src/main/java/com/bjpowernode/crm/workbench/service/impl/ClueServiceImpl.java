@@ -1,6 +1,8 @@
 package com.bjpowernode.crm.workbench.service.impl;
 
+import com.bjpowernode.crm.workbench.mapper.ClueActivityRelationMapper;
 import com.bjpowernode.crm.workbench.mapper.ClueMapper;
+import com.bjpowernode.crm.workbench.mapper.ClueRemarkMapper;
 import com.bjpowernode.crm.workbench.model.Clue;
 import com.bjpowernode.crm.workbench.service.ClueService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +16,15 @@ import java.util.Map;
  */
 @Service
 public class ClueServiceImpl implements ClueService {
-    @Autowired
     private ClueMapper clueMapper;
+    private ClueRemarkMapper clueRemarkMapper;
+    private ClueActivityRelationMapper clueActivityRelationMapper;
+
+    public ClueServiceImpl(ClueMapper clueMapper, ClueRemarkMapper clueRemarkMapper, ClueActivityRelationMapper clueActivityRelationMapper) {
+        this.clueMapper = clueMapper;
+        this.clueRemarkMapper = clueRemarkMapper;
+        this.clueActivityRelationMapper = clueActivityRelationMapper;
+    }
 
     @Override
     public int saveCreateClue(Clue clue) {
@@ -33,8 +42,10 @@ public class ClueServiceImpl implements ClueService {
     }
 
     @Override
-    public int deleteClueByIds(String[] ids) {
-        return clueMapper.deleteClueByIds(ids);
+    public void deleteClueByIds(String[] ids) {
+        clueMapper.deleteClueByIds(ids);
+        clueRemarkMapper.deleteClueRemarkByClueIds(ids);
+        clueActivityRelationMapper.deleteClueActivityRelationByClueIds(ids);
     }
 
     @Override

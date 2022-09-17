@@ -12,7 +12,7 @@ public interface ClueService {
     int saveCreateClue(Clue clue);
     List<Clue> queryClueByConditionForPage(Map<String,Object> map);
     int queryTotalRows(Map<String,Object> map);
-    int deleteClueByIds(String[] ids);
+    void deleteClueByIds(String[] ids);
     Clue queryClueById(String id);
     int saveEditClue(Clue clue);
 }

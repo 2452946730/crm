@@ -132,8 +132,6 @@ public interface ActivityMapper {
 
     /**
      * 根据市场活动的名字模糊查询没有跟此线索关联的
-     * @param activityName
-     * @param clueId
      * @return
      */
     List<Activity> selectActivityByNameClueId(Map map);
@@ -144,4 +142,11 @@ public interface ActivityMapper {
      * @return
      */
     List<Activity> selectActivityForDetailByIds(String[] activityId);
+
+    /**
+     * 根据市场活动的name模糊查询域此线索关联的市场活动
+     * @param map
+     * @return
+     */
+    List<Activity> selectActivityForConvertByNameAndClueId(Map map);
 }

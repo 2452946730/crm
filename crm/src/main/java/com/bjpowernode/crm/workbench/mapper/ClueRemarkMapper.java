@@ -80,4 +80,11 @@ public interface ClueRemarkMapper {
      * @return
      */
     int updateClueRemarkById(ClueRemark clueRemark);
+
+    /**
+     * 根据线索的id批量删除线索备注
+     * @param ids  线索的备注
+     * @return
+     */
+    int deleteClueRemarkByClueIds(String[] ids);
 }

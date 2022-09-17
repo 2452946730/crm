@@ -16,6 +16,7 @@ import com.bjpowernode.crm.workbench.service.ClueActivityRelationService;
 import com.bjpowernode.crm.workbench.service.ClueRemarkService;
 import com.bjpowernode.crm.workbench.service.ClueService;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -109,17 +110,11 @@ public class ClueController {
     @RequestMapping("/workbench/clue/deleteClueByIds.do")
     @ResponseBody
     public Object deleteClueByIds(String[] id){
-        System.out.println("-------------->"+id);
         RetObject retObject=new RetObject();
         try {
             //调用service,处理业务
-            int ret=clueService.deleteClueByIds(id);
-            if(ret>0){
-                retObject.setCode(Contants.RETURN_OBJECT_CODE_SUCCESS);
-            }else{
-                retObject.setCode(Contants.RETURN_OBJECT_CODE_FAIL);
-                retObject.setMessage("系统忙,请稍后重试....");
-            }
+             clueService.deleteClueByIds(id);
+             retObject.setCode(Contants.RETURN_OBJECT_CODE_SUCCESS);
         } catch (Exception e) {
             e.printStackTrace();
             retObject.setCode(Contants.RETURN_OBJECT_CODE_FAIL);
@@ -224,5 +219,26 @@ public class ClueController {
             retObject.setMessage("系统忙,请稍后重试....");
         }
         return retObject;
+    }
+
+    @GetMapping("/workbench/clue/toConvert.do")
+    public String toConvert(String id, HttpServletRequest request){
+        //调用service,查询结果
+        Clue clue = clueService.queryClueById(id);
+        List<DicValue> stageList = dicValueService.queryDicValueByTypeCode("stage");
+        //将数据保存到request中
+        request.setAttribute("clue",clue);
+        request.setAttribute("stageList",stageList);
+        return "workbench/clue/convert";
+    }
+
+    @PostMapping("/workbench/clue/queryActivityForConvertByNameAndClueId.do")
+    @ResponseBody
+    public Object queryActivityForConvertByNameAndClueId(String activityName,String clueId){
+        Map<String,Object> map = new HashMap<>();
+        map.put("activityName",activityName);
+        map.put("clueId",clueId);
+        List<Activity> activityList = activityService.queryActivityForConvertByNameAndClueId(map);
+        return activityList;
     }
 }

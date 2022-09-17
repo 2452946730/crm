@@ -121,4 +121,11 @@
     delete from crm.tbl_clue_activity_relation
     where clue_id = #{clueId} and activity_id = #{activityId}
   </delete>
+  <delete id="deleteClueActivityRelationByClueIds">
+    delete from tbl_clue_activity_relation
+    where clue_id in
+    <foreach collection="array" item="id" open="(" separator="," close=")">
+      #{id}
+    </foreach>
+  </delete>
 </mapper>
