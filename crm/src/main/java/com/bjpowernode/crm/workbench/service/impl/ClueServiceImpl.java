@@ -91,7 +91,7 @@ public class ClueServiceImpl implements ClueService {
         customer.setCreateTime(DateUtils.formateDateTime(new Date()));
         customer.setDescription(clue.getDescription());
         customer.setId(UUIDUtils.getUUID());
-        customer.setName(clue.getFullname());
+        customer.setName(clue.getCompany());
         customer.setNextContactTime(clue.getNextContactTime());
         customer.setOwner(user.getId());
         customer.setPhone(clue.getPhone());
