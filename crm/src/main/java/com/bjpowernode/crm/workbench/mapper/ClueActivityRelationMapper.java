@@ -73,4 +73,18 @@ public interface ClueActivityRelationMapper {
      * @return
      */
     int deleteClueActivityRelationByClueIds(String[] ids);
+
+    /**
+     * 根据线索的id 查询线索与市场活动的关联关系
+     * @param clueId 线索的id
+     * @return
+     */
+    List<ClueActivityRelation> selectClueActivityRelationByClueId(String clueId);
+
+    /**
+     * 根据线索的id删除线索和市场活动的关联关系
+     * @param ClueId
+     * @return
+     */
+    int deleteClueActivityRelationByClueId(String ClueId);
 }

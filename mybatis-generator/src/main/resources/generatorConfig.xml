@@ -70,7 +70,7 @@
             <property name="enableSubPackages" value="true"/>
         </javaClientGenerator>
 
-        <!--
+ <!--
         <table tableName="tbl_user" domainObjectName="User"
                enableCountByExample="false" enableUpdateByExample="false"
                enableDeleteByExample="false" enableSelectByExample="false"
@@ -83,13 +83,13 @@
                enableDeleteByExample="false" enableSelectByExample="false"
                selectByExampleQueryId="false">
         </table>
--->
+
         <table tableName="tbl_clue_activity_relation" domainObjectName="ClueActivityRelation"
                enableCountByExample="false" enableUpdateByExample="false"
                enableDeleteByExample="false" enableSelectByExample="false"
                selectByExampleQueryId="false">
         </table>
-<!--
+
         <table tableName="tbl_clue_remark" domainObjectName="ClueRemark"
                enableCountByExample="false" enableUpdateByExample="false"
                enableDeleteByExample="false" enableSelectByExample="false"
@@ -111,8 +111,8 @@
                enableDeleteByExample="false" enableSelectByExample="false"
                selectByExampleQueryId="false">
         </table>
-        -->
-        <!--
+
+
         <table tableName="tbl_customer" domainObjectName="Customer"
                enableCountByExample="false" enableUpdateByExample="false"
                enableDeleteByExample="false" enableSelectByExample="false"
@@ -125,47 +125,47 @@
                selectByExampleQueryId="false">
         </table>
 
-        <table tableName="tbl_dictionary_type" domainObjectName="DictionaryType"
-               enableCountByExample="false" enableUpdateByExample="false"
-               enableDeleteByExample="false" enableSelectByExample="false"
-               selectByExampleQueryId="false">
-        </table>
+              <table tableName="tbl_dictionary_type" domainObjectName="DictionaryType"
+                     enableCountByExample="false" enableUpdateByExample="false"
+                     enableDeleteByExample="false" enableSelectByExample="false"
+                     selectByExampleQueryId="false">
+              </table>
 
 
-        <table tableName="tbl_dic_value" domainObjectName="DicValue"
-               enableCountByExample="false" enableUpdateByExample="false"
-               enableDeleteByExample="false" enableSelectByExample="false"
-               selectByExampleQueryId="false">
-        </table>
+              <table tableName="tbl_dic_value" domainObjectName="DicValue"
+                     enableCountByExample="false" enableUpdateByExample="false"
+                     enableDeleteByExample="false" enableSelectByExample="false"
+                     selectByExampleQueryId="false">
+              </table>
 
-        <table tableName="tbl_activity" domainObjectName="Activity"
-               enableCountByExample="false" enableUpdateByExample="false"
-               enableDeleteByExample="false" enableSelectByExample="false"
-               selectByExampleQueryId="false">
-        </table>
+              <table tableName="tbl_activity" domainObjectName="Activity"
+                     enableCountByExample="false" enableUpdateByExample="false"
+                     enableDeleteByExample="false" enableSelectByExample="false"
+                     selectByExampleQueryId="false">
+              </table>
 
 
-        <table tableName="tbl_activity_remark" domainObjectName="ActivityRemark"
-               enableCountByExample="false" enableUpdateByExample="false"
-               enableDeleteByExample="false" enableSelectByExample="false"
-               selectByExampleQueryId="false">
-        </table>
+              <table tableName="tbl_activity_remark" domainObjectName="ActivityRemark"
+                     enableCountByExample="false" enableUpdateByExample="false"
+                     enableDeleteByExample="false" enableSelectByExample="false"
+                     selectByExampleQueryId="false">
+              </table>
 
-                <table tableName="tbl_transaction" domainObjectName="Transaction"
-                       enableCountByExample="false" enableUpdateByExample="false"
-                       enableDeleteByExample="false" enableSelectByExample="false"
-                       selectByExampleQueryId="false">
-                </table>
-                <table tableName="tbl_transaction_history" domainObjectName="TransactionHistory"
-                       enableCountByExample="false" enableUpdateByExample="false"
-                       enableDeleteByExample="false" enableSelectByExample="false"
-                       selectByExampleQueryId="false">
-                </table>
-                <table tableName="tbl_transaction_remark" domainObjectName="TransactionRemark"
-                       enableCountByExample="false" enableUpdateByExample="false"
-                       enableDeleteByExample="false" enableSelectByExample="false"
-                       selectByExampleQueryId="false">
-                </table>
-        -->
+                      <table tableName="tbl_tran" domainObjectName="Tran"
+                             enableCountByExample="false" enableUpdateByExample="false"
+                             enableDeleteByExample="false" enableSelectByExample="false"
+                             selectByExampleQueryId="false">
+                      </table>
+                      <table tableName="tbl_tran_history" domainObjectName="TranHistory"
+                             enableCountByExample="false" enableUpdateByExample="false"
+                             enableDeleteByExample="false" enableSelectByExample="false"
+                             selectByExampleQueryId="false">
+                      </table>
+                      <table tableName="tbl_tran_remark" domainObjectName="TranRemark"
+                             enableCountByExample="false" enableUpdateByExample="false"
+                             enableDeleteByExample="false" enableSelectByExample="false"
+                             selectByExampleQueryId="false">
+                      </table>
+-->
     </context>
 </generatorConfiguration>

@@ -15,4 +15,5 @@ public interface ClueService {
     void deleteClueByIds(String[] ids);
     Clue queryClueById(String id);
     int saveEditClue(Clue clue);
+    void saveConvertClue(Map map);
 }

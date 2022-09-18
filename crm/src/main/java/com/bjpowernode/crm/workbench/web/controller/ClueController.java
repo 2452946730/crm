@@ -241,4 +241,32 @@ public class ClueController {
         List<Activity> activityList = activityService.queryActivityForConvertByNameAndClueId(map);
         return activityList;
     }
+
+    @PostMapping("/workbench/convert/saveConvertClue.do")
+    @ResponseBody
+    public Object saveConvertClue(String id, String money, String name, String expectedDate, String stage, String source, String activityId, String isCreate, HttpSession session){
+        User user = (User)session.getAttribute(Contants.SYSTEM_USER);
+        //封装参数
+        Map map = new HashMap();
+        map.put("clueId",id);
+        map.put("money",money);
+        map.put("name",name);
+        map.put("expectedDate",expectedDate);
+        map.put("stage",stage);
+        map.put("source",source);
+        map.put("activityId",activityId);
+        map.put("isCreate",isCreate);
+        map.put("user",user);
+        RetObject retObject = new RetObject();
+        try {
+            //调用servic
+            clueService.saveConvertClue(map);
+            retObject.setCode(Contants.RETURN_OBJECT_CODE_SUCCESS);
+        } catch (Exception e) {
+            e.printStackTrace();
+            retObject.setCode(Contants.RETURN_OBJECT_CODE_FAIL);
+            retObject.setMessage("系统忙,请稍后重试...");
+        }
+        return retObject;
+    }
 }

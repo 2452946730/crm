@@ -70,7 +70,56 @@
 				$("#searchActivityModal").modal("hide");
 			});
 		});
+		//预计成交日期添加日历
+		myDate($("#expectedClosingDate"))
+		//给转换按钮添加单击事件
+		$("#convertClue").click(function () {
+			//收集参数
+			let id = "${clue.id}";
+			let money = $("#amountOfMoney").val();
+			let name = $("#tradeName").val();
+			let expectedDate = $("#expectedClosingDate").val();
+			let stage = $("#stage").val();
+			let source = $("#activityName").val();
+			let activityId = $("#activityHiddenId").val();
+			let isCreate = $("#isCreateTransaction").prop("checked");
+			//发送请求
+			$.ajax({
+				url:"workbench/convert/saveConvertClue.do",
+				data:{
+					id:id,
+					money:money,
+					name:name,
+					expectedDate:expectedDate,
+					stage:stage,
+					source:source,
+					activityId:activityId,
+					isCreate:isCreate
+				},
+				type:"post",
+				dataType:"json",
+				success:function (data) {
+					if(data.code == 1){
+						window.location.href="workbench/clue/index.do";
+					} else {
+						alert(data.message);
+					}
+				}
+			});
+		});
 	});
+	//设置日历插件
+	function myDate(id) {
+		id.datetimepicker({
+			language:"zh-CN",
+			format:"yyyy-mm-dd",
+			autoclose:true,
+			minView:"month",
+			initialDate:new Date(),
+			todayBtn:true,
+			clearBtn:true
+		});
+	}
 </script>
 
 </head>
@@ -179,7 +228,7 @@
 		<b>${clue.owner}</b>
 	</div>
 	<div id="operation" style="position: relative; left: 40px; height: 35px; top: 100px;">
-		<input class="btn btn-primary" type="button" value="转换">
+		<input class="btn btn-primary" id="convertClue" type="submit" value="转换">
 		&nbsp;&nbsp;&nbsp;&nbsp;
 		<input class="btn btn-default" type="button" value="取消">
 	</div>

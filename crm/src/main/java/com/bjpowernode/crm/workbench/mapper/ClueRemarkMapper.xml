@@ -173,6 +173,11 @@
     where cr.clue_id = #{clueId}
     order by cr.create_time asc
   </select>
+  <select id="selectClueRemarkByClueId" resultType="com.bjpowernode.crm.workbench.model.ClueRemark">
+    select <include refid="Base_Column_List"></include>
+    from crm.tbl_clue_remark
+    where clue_id = #{clueId}
+  </select>
   <insert id="insertClueRemark" parameterType="clueRemark">
     insert into crm.tbl_clue_remark(id,note_content,create_by,create_time,edit_flag,clue_id)
     values (#{id},#{noteContent},#{createBy},#{createTime},#{editFlag},#{clueId})
@@ -187,6 +192,10 @@
     <foreach collection="array" item="id" open="(" separator="," close=")">
       #{id}
     </foreach>
+  </delete>
+  <delete id="deleteClueRemarkByClueId">
+    delete from crm.tbl_clue_remark
+    where clue_id = #{clueId}
   </delete>
 
   <update id="updateClueRemarkById" parameterType="clueRemark">
