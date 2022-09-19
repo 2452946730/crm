@@ -349,9 +349,9 @@
 		var company=$("#query-company").val();
 		var mphone=$("#query-mphone").val();
 		var phone=$("#query-phone").val();
-		var source=$("#query-source").val();
+		var source=$("#query-source option:selected").text();
 		var owner=$("#query-owner").val();
-		var state=$("#query-state").val();
+		var state=$("#query-state option:selected").text();
 		//发送数据
 		$.ajax({
 			url:"workbench/clue/queryClueByConditionForPage.do",
@@ -450,7 +450,7 @@
 								<select class="form-control" id="create-appellation">
 								  <option></option>
 									<c:forEach items="${appellationList}" var="app">
-										<option id="${app.id}">${app.value}</option>
+										<option value="${app.id}">${app.value}</option>
 									</c:forEach>
 								</select>
 							</div>
@@ -492,7 +492,7 @@
 								<select class="form-control" id="create-state">
 								  <option></option>
 								  <c:forEach items="${clueStateList}" var="cs">
-									  <option id="${cs.id}">${cs.value}</option>
+									  <option value="${cs.id}">${cs.value}</option>
 								  </c:forEach>
 								</select>
 							</div>
@@ -504,7 +504,7 @@
 								<select class="form-control" id="create-source">
 								  <option></option>
 								  <c:forEach items="${sourceList}" var="sl">
-									  <option id="${sl.id}">${sl.value}</option>
+									  <option value="${sl.id}">${sl.value}</option>
 								  </c:forEach>
 								</select>
 							</div>
@@ -591,7 +591,7 @@
 								<select class="form-control" id="edit-appellation">
 								  <option></option>
 									<c:forEach items="${appellationList}" var="app">
-										<option id="${app.id}">${app.value}</option>
+										<option value="${app.id}">${app.value}</option>
 									</c:forEach>
 								</select>
 							</div>
@@ -633,7 +633,7 @@
 								<select class="form-control" id="edit-state">
 								  <option></option>
 									<c:forEach items="${clueStateList}" var="cs">
-										<option id="${cs.id}">${cs.value}</option>
+										<option value="${cs.id}">${cs.value}</option>
 									</c:forEach>
 								</select>
 							</div>
@@ -645,7 +645,7 @@
 								<select class="form-control" id="edit-source">
 								  <option></option>
 									<c:forEach items="${sourceList}" var="sl">
-										<option id="${sl.id}">${sl.value}</option>
+										<option value="${sl.id}">${sl.value}</option>
 									</c:forEach>
 								</select>
 							</div>
@@ -741,7 +741,7 @@
 					  <select id="query-source" class="form-control">
 					  	  <option></option>
 						  <c:forEach items="${sourceList}" var="sl">
-							  <option id="${sl.id}">${sl.value}</option>
+							  <option value="${sl.id}">${sl.value}</option>
 						  </c:forEach>
 					  </select>
 				    </div>
@@ -771,7 +771,7 @@
 					  <select id="query-state" class="form-control">
 					  	<option></option>
 						  <c:forEach items="${clueStateList}" var="cs">
-							  <option id="${cs.id}">${cs.value}</option>
+							  <option value="${cs.id}">${cs.value}</option>
 						  </c:forEach>
 					  </select>
 				    </div>
