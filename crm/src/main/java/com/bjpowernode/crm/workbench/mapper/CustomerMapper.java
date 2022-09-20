@@ -1,6 +1,9 @@
 package com.bjpowernode.crm.workbench.mapper;
 
 import com.bjpowernode.crm.workbench.model.Customer;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface CustomerMapper {
     /**
@@ -50,4 +53,17 @@ public interface CustomerMapper {
      * @mbggenerated Sat Sep 17 10:23:21 CST 2022
      */
     int updateByPrimaryKey(Customer record);
+
+    /**
+     * 根据name 模糊查询客户名称
+     * @return
+     */
+    List<String> selectCustomerNameByName(@Param("name") String name);
+
+    /**
+     * 根据客户名称 精确查找用户
+     * @param name 用户的全称
+     * @return
+     */
+    Customer selectCustomerByName(@Param("name") String name);
 }

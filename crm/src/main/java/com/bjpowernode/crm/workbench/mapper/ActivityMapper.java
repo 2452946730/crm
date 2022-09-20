@@ -1,6 +1,7 @@
 package com.bjpowernode.crm.workbench.mapper;
 
 import com.bjpowernode.crm.workbench.model.Activity;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;
@@ -149,4 +150,10 @@ public interface ActivityMapper {
      * @return
      */
     List<Activity> selectActivityForConvertByNameAndClueId(Map map);
+
+    /**
+     * 根据名称模糊查询市场活动
+     * @return
+     */
+    List<Activity> selectActivityForTran(@Param("activityName") String activityName);
 }

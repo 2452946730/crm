@@ -54,7 +54,7 @@
     JOIN tbl_user u1 ON t.OWNER = u1.id
     JOIN tbl_user u2 ON t.create_by = u2.id
     LEFT JOIN tbl_user u3 ON t.edit_by = u3.id
-    JOIN tbl_contacts c ON t.contacts_id = c.id
+    LEFT JOIN tbl_contacts c ON t.contacts_id = c.id
     JOIN tbl_customer cus ON t.customer_id = cus.id
     LEFT JOIN tbl_activity a ON t.activity_id = a.id
     <where>
@@ -89,7 +89,7 @@
     JOIN tbl_user u1 ON t.OWNER = u1.id
     JOIN tbl_user u2 ON t.create_by = u2.id
     LEFT JOIN tbl_user u3 ON t.edit_by = u3.id
-    JOIN tbl_contacts c ON t.contacts_id = c.id
+    LEFT JOIN tbl_contacts c ON t.contacts_id = c.id
     JOIN tbl_customer cus ON t.customer_id = cus.id
     LEFT JOIN tbl_activity a ON t.activity_id = a.id
     <where>

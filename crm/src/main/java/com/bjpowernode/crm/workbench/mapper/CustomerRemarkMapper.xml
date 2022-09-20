@@ -35,6 +35,7 @@
     from tbl_customer_remark
     where id = #{id,jdbcType=CHAR}
   </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     <!--
       WARNING - @mbggenerated

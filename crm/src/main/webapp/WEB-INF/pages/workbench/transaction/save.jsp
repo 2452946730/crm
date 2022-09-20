@@ -15,7 +15,7 @@
 <script type="text/javascript" src="jquery/bootstrap_3.3.0/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="jquery/bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.js"></script>
 <script type="text/javascript" src="jquery/bootstrap-datetimepicker-master/locale/bootstrap-datetimepicker.zh-CN.js"></script>
-//引入typeahead
+<%--引入typeahead--%>
 <script type="text/javascript" src="jquery/bs_typeahead/bootstrap3-typeahead.min.js"></script>
 	<script type="text/javascript">
 		$(function () {
@@ -34,7 +34,157 @@
 					}
 				});
 			});
+			//给查询客户名称添加键盘弹起事件
+			$("#create-customerName").typeahead({
+				source:function (jquery, process) {
+					//发送请求
+					$.ajax({
+						url: "workbench/transaction/queryCustomerNameByName.do",
+						data: {name: jquery},
+						type: "post",
+						dataType: "json",
+						success: function (data) {
+							process(data);
+						}
+					});
+				}
+			});
+			//给市场活动源添加单击事件
+			$("#activityA").click(function () {
+				$("#findMarketActivity").modal("show");
+				//初始化
+				$("#queryActivityTxt").val("");
+				$("#activityTBody").html("");
+			});
+			//给查找市场活动添加键盘弹起事件
+			$("#queryActivityTxt").keyup(function () {
+				//收集参数
+				let activityName = $("#queryActivityTxt").val();
+				$.ajax({
+					url:"workbench/transaction/queryAllActivity.do",
+					data:{activityName:activityName},
+					type:"post",
+					dataType:"json",
+					success:function (data) {
+						let str = "";
+						$.each(data,function (index, obj) {
+							str+="<tr>";
+							str+="<td><input activityName=\""+obj.name+"\" value=\""+obj.id+"\" type=\"radio\" name=\"activity\"/></td>";
+							str+="<td>"+obj.name+"</td>";
+							str+="<td>"+obj.startDate+"</td>";
+							str+="<td>"+obj.endDate+"</td>";
+							str+="<td>"+obj.owner+"</td>";
+							str+="</tr>";
+						})
+						$("#activityTBody").html(str);
+						//给查找市场活动添加单击事件
+						$("#activityTBody").on("click","input[type='radio']",function () {
+							$("#create-activitySource").val($(this).attr("activityName"));
+							$("#create-activitySourceId").val(this.value);
+							$("#findMarketActivity").modal("hide");
+						})
+					}
+				});
+			});
+			//给联系人名称添加单击事件
+			$("#contactsA").click(function () {
+				$("#findContacts").modal("show");
+				//初始化
+				$("#queryContactsTxt").val("");
+				$("#contactsTBody").html("");
+			});
+			//搜索联系人名称添加键盘弹起事件
+			$("#queryContactsTxt").keyup(function () {
+				//收集参数
+				let contactsName = $("#queryContactsTxt").val();
+				$.ajax({
+					url:"workbench/transaction/queryAllContacts.do",
+					data:{contactsName:contactsName},
+					type:"post",
+					dataType:"json",
+					success:function (data) {
+						let str = "";
+						$.each(data,function (index,obj){
+							str+="<tr>";
+							str+="<td><input contactsName=\""+obj.fullname+"\" value=\""+obj.id+"\" type=\"radio\" name=\"activity\"/></td>";
+							str+="<td>"+obj.fullname+"</td>";
+							str+="<td>"+obj.email+"</td>";
+							str+="<td>"+obj.mphone+"</td>";
+							str+="</tr>";
+						});
+						$("#contactsTBody").html(str);
+						$("#contactsTBody").on("click","input",function () {
+							$("#create-contactsName").val($(this).attr("contactsName"));
+							$("#create-contactsNameId").val(this.value);
+							$("#findContacts").modal("hide");
+						})
+					}
+				});
+			});
+			//给预计成交日期设置日期函数
+			myDate($("#create-expectedDate"));
+			//给下次联系时间设置日期函数
+			myDate($("#create-nextContactTime"));
+			//给保存按钮添加单击事件
+			$("#saveCreateTranBtn").click(function () {
+				//收集参数
+				let owner = $("#create-owner").val();
+				let money = $("#create-money").val();
+				let name = $("#create-name").val();
+				let expectedDate = $("#create-expectedDate").val();
+				let customerId = $("#create-customerName").val();
+				let stage = $("#create-stage option:selected").text();
+				let type = $("#create-type option:selected").text();
+				let source = $("#create-source option:selected").text();
+				let activityId = $("#create-activitySourceId").val();
+				let contactsId = $("#create-contactsNameId").val();
+				let description = $("#create-description").val();
+				let contactSummary = $("#create-contactSummary").val();
+				let nextContactTime = $("#create-nextContactTime").val();
+				//表单验证
+				//发送请求
+				$.ajax({
+					url:"workbench/transaction/saveCreateTran.do",
+					data:{
+						owner:owner,
+						money:money,
+						name:name,
+						expectedDate:expectedDate,
+						customerId:customerId,
+						stage:stage,
+						type:type,
+						source:source,
+						activityId:activityId,
+						contactsId:contactsId,
+						description:description,
+						contactSummary:contactSummary,
+						nextContactTime:nextContactTime,
+					},
+					type:"post",
+					dataType:"json",
+					success:function (data) {
+						if (data.code == 1) {
+							window.location.href = "workbench/transaction/index.do";
+						} else {
+							alert(data.message);
+						}
+					}
+				});
+
+			});
 		});
+		//设置日历插件
+		function myDate(id) {
+			id.datetimepicker({
+				language:"zh-CN",
+				format:"yyyy-mm-dd",
+				autoclose:true,
+				minView:"month",
+				initialDate:new Date(),
+				todayBtn:true,
+				clearBtn:true
+			});
+		}
 	</script>
 </head>
 <body>
@@ -53,7 +203,7 @@
 					<div class="btn-group" style="position: relative; top: 18%; left: 8px;">
 						<form class="form-inline" role="form">
 						  <div class="form-group has-feedback">
-						    <input type="text" class="form-control" style="width: 300px;" placeholder="请输入市场活动名称，支持模糊查询">
+						    <input type="text" class="form-control" id="queryActivityTxt" style="width: 300px;" placeholder="请输入市场活动名称，支持模糊查询">
 						    <span class="glyphicon glyphicon-search form-control-feedback"></span>
 						  </div>
 						</form>
@@ -68,8 +218,8 @@
 								<td>所有者</td>
 							</tr>
 						</thead>
-						<tbody>
-							<tr>
+						<tbody id="activityTBody">
+							<%--<tr>
 								<td><input type="radio" name="activity"/></td>
 								<td>发传单</td>
 								<td>2020-10-10</td>
@@ -82,7 +232,7 @@
 								<td>2020-10-10</td>
 								<td>2020-10-20</td>
 								<td>zhangsan</td>
-							</tr>
+							</tr>--%>
 						</tbody>
 					</table>
 				</div>
@@ -104,7 +254,7 @@
 					<div class="btn-group" style="position: relative; top: 18%; left: 8px;">
 						<form class="form-inline" role="form">
 						  <div class="form-group has-feedback">
-						    <input type="text" class="form-control" style="width: 300px;" placeholder="请输入联系人名称，支持模糊查询">
+						    <input type="text" id="queryContactsTxt" class="form-control" style="width: 300px;" placeholder="请输入联系人名称，支持模糊查询">
 						    <span class="glyphicon glyphicon-search form-control-feedback"></span>
 						  </div>
 						</form>
@@ -118,8 +268,8 @@
 								<td>手机</td>
 							</tr>
 						</thead>
-						<tbody>
-							<tr>
+						<tbody id="contactsTBody">
+							<%--<tr>
 								<td><input type="radio" name="activity"/></td>
 								<td>李四</td>
 								<td>lisi@bjpowernode.com</td>
@@ -130,7 +280,7 @@
 								<td>李四</td>
 								<td>lisi@bjpowernode.com</td>
 								<td>12345678901</td>
-							</tr>
+							</tr>--%>
 						</tbody>
 					</table>
 				</div>
@@ -142,7 +292,7 @@
 	<div style="position:  relative; left: 30px;">
 		<h3>创建交易</h3>
 	  	<div style="position: relative; top: -40px; left: 70%;">
-			<button type="button" class="btn btn-primary">保存</button>
+			<button type="button" id="saveCreateTranBtn" class="btn btn-primary">保存</button>
 			<button type="button" class="btn btn-default">取消</button>
 		</div>
 		<hr style="position: relative; top: -40px;">
@@ -168,9 +318,9 @@
 			<div class="col-sm-10" style="width: 300px;">
 				<input type="text" class="form-control" id="create-name">
 			</div>
-			<label for="create-expectedClosingDate" class="col-sm-2 control-label">预计成交日期<span style="font-size: 15px; color: red;">*</span></label>
+			<label for="create-expectedDate" class="col-sm-2 control-label">预计成交日期<span style="font-size: 15px; color: red;">*</span></label>
 			<div class="col-sm-10" style="width: 300px;">
-				<input type="text" class="form-control" id="create-expectedClosingDate">
+				<input type="text" class="form-control" id="create-expectedDate" readonly>
 			</div>
 		</div>
 
@@ -216,15 +366,17 @@
 				 </c:forEach>
 				</select>
 			</div>
-			<label for="create-source" class="col-sm-2 control-label">市场活动源&nbsp;&nbsp;<a href="javascript:void(0);" data-toggle="modal" data-target="#findMarketActivity"><span class="glyphicon glyphicon-search"></span></a></label>
+			<label for="create-activitySource" class="col-sm-2 control-label">市场活动源&nbsp;&nbsp;<a href="javascript:void(0);" id="activityA"><span class="glyphicon glyphicon-search"></span></a></label>
 			<div class="col-sm-10" style="width: 300px;">
-				<input type="text" class="form-control" id="create-source">
+				<input type="hidden" id="create-activitySourceId"/>
+				<input type="text" class="form-control" id="create-activitySource" readonly>
 			</div>
 		</div>
 
 		<div class="form-group">
-			<label for="create-contactsName" class="col-sm-2 control-label">联系人名称&nbsp;&nbsp;<a href="javascript:void(0);" data-toggle="modal" data-target="#findContacts"><span class="glyphicon glyphicon-search"></span></a></label>
+			<label for="create-contactsName" class="col-sm-2 control-label">联系人名称&nbsp;&nbsp;<a href="javascript:void(0);" id="contactsA" ><span class="glyphicon glyphicon-search"></span></a></label>
 			<div class="col-sm-10" style="width: 300px;">
+				<input type="hidden" id="create-contactsNameId" />
 				<input type="text" class="form-control" id="create-contactsName">
 			</div>
 		</div>
@@ -246,7 +398,7 @@
 		<div class="form-group">
 			<label for="create-nextContactTime" class="col-sm-2 control-label">下次联系时间</label>
 			<div class="col-sm-10" style="width: 300px;">
-				<input type="text" class="form-control" id="create-nextContactTime">
+				<input type="text" class="form-control" id="create-nextContactTime" readonly>
 			</div>
 		</div>
 
