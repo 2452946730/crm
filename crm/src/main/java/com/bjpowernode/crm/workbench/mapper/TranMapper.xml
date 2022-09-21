@@ -134,6 +134,12 @@
            LEFT JOIN tbl_dic_value d3 on d3.id = t.type
     where t.id = #{id}
   </select>
+  <select id="selectCountOfByStage" resultType="com.bjpowernode.crm.workbench.VO.FunnelVO">
+    SELECT d.value name, count( * ) value
+    FROM tbl_tran t
+    JOIN tbl_dic_value d ON t.stage = d.id
+    GROUP BY t.stage
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     <!--
       WARNING - @mbggenerated

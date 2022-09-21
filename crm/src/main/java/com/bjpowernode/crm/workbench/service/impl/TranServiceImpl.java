@@ -3,6 +3,7 @@ package com.bjpowernode.crm.workbench.service.impl;
 import com.bjpowernode.crm.commons.utils.DateUtils;
 import com.bjpowernode.crm.commons.utils.UUIDUtils;
 import com.bjpowernode.crm.settings.model.User;
+import com.bjpowernode.crm.workbench.VO.FunnelVO;
 import com.bjpowernode.crm.workbench.mapper.CustomerMapper;
 import com.bjpowernode.crm.workbench.mapper.TranHistoryMapper;
 import com.bjpowernode.crm.workbench.mapper.TranMapper;
@@ -89,5 +90,10 @@ public class TranServiceImpl implements TranService {
     @Override
     public Tran queryTranForDetailById(String id) {
         return tranMapper.selectTranForDetailById(id);
+    }
+
+    @Override
+    public List<FunnelVO> queryCountOfByStage() {
+        return tranMapper.selectCountOfByStage();
     }
 }

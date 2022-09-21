@@ -1,6 +1,7 @@
 package com.bjpowernode.crm.workbench.service;
 
 import com.bjpowernode.crm.settings.model.User;
+import com.bjpowernode.crm.workbench.VO.FunnelVO;
 import com.bjpowernode.crm.workbench.model.Tran;
 
 import java.util.List;
@@ -37,4 +38,10 @@ public interface TranService {
      * @return
      */
     Tran queryTranForDetailById(String id);
+
+    /**
+     * 查询线索的阶段和该阶段的数量
+     * @return
+     */
+    List<FunnelVO> queryCountOfByStage();
 }

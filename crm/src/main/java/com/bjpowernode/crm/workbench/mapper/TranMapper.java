@@ -1,5 +1,6 @@
 package com.bjpowernode.crm.workbench.mapper;
 
+import com.bjpowernode.crm.workbench.VO.FunnelVO;
 import com.bjpowernode.crm.workbench.model.Tran;
 import org.apache.ibatis.annotations.Param;
 
@@ -75,4 +76,10 @@ public interface TranMapper {
      * @return
      */
     Tran selectTranForDetailById(@Param("id") String id);
+
+    /**
+     * 查询线索的阶段和数量
+     * @return
+     */
+    List<FunnelVO> selectCountOfByStage();
 }
