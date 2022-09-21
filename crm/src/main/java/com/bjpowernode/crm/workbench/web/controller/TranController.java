@@ -1,5 +1,6 @@
 package com.bjpowernode.crm.workbench.web.controller;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSON;
 import cn.hutool.json.JSONArray;
@@ -11,11 +12,11 @@ import com.bjpowernode.crm.settings.model.DicValue;
 import com.bjpowernode.crm.settings.model.User;
 import com.bjpowernode.crm.settings.service.DicValueService;
 import com.bjpowernode.crm.settings.service.UserService;
+import com.bjpowernode.crm.workbench.VO.TranVO;
 import com.bjpowernode.crm.workbench.model.Tran;
-import com.bjpowernode.crm.workbench.service.ActivityService;
-import com.bjpowernode.crm.workbench.service.ContactsService;
-import com.bjpowernode.crm.workbench.service.CustomerService;
-import com.bjpowernode.crm.workbench.service.TranService;
+import com.bjpowernode.crm.workbench.model.TranHistory;
+import com.bjpowernode.crm.workbench.model.TranRemark;
+import com.bjpowernode.crm.workbench.service.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -43,6 +44,10 @@ public class TranController {
     private ActivityService activityService;
     @Resource
     private ContactsService contactsService;
+    @Resource
+    private TranRemarkService tranRemarkService;
+    @Resource
+    private TranHistoryService tranHistoryService;
 
     @GetMapping("/workbench/transaction/index.do")
     public String index(HttpServletRequest request){
@@ -282,5 +287,33 @@ public class TranController {
             retObject.setMessage("系统忙,请稍后重试...");
         }
         return retObject;
+    }
+
+    @GetMapping("/workbench/transaction/toTranDetail.do")
+    public String toTranDetail(String id, HttpServletRequest request){
+        //查询线索的明细
+        Tran tran = tranService.queryTranForDetailById(id);
+        //查询线索备注列表
+        List<TranRemark> remarkList = tranRemarkService.queryTranRemarkForDetailByTranId(id);
+        //查询线索历史的历史
+        List<TranHistory> historyList = tranHistoryService.queryTranHistoryForDetailByTranId(id);
+        //查询线索所处阶段的orderNo
+        String tranNo = dicValueService.queryOrderNoByValue(tran.getStage());
+        //查询该阶段的可能性
+        ResourceBundle bundle = ResourceBundle.getBundle("possibility");
+        String possibility = bundle.getString(tran.getStage());
+        //查询阶段的orderNo
+        List<DicValue> stageList = dicValueService.queryDicValueByTypeCode("stage");
+        //封装参数
+        TranVO tranVO = BeanUtil.copyProperties(tran, TranVO.class);
+        tranVO.setPossibility(possibility);
+        tranVO.setTranNO(tranNo);
+        //将数据放到request域中
+        request.setAttribute("tran", tranVO);
+        request.setAttribute("remarkList", remarkList);
+        request.setAttribute("historyList", historyList);
+        request.setAttribute("stageList", stageList);
+        //请求转发
+        return "workbench/transaction/detail";
     }
 }

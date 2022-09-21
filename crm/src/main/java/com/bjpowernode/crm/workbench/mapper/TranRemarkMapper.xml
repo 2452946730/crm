@@ -35,6 +35,13 @@
     from tbl_tran_remark
     where id = #{id,jdbcType=CHAR}
   </select>
+  <select id="selectTranRemarkForDetailByTranId" resultType="com.bjpowernode.crm.workbench.model.TranRemark">
+    select ttr.id, ttr.note_content, u1.name create_by, ttr.create_time, u2.name edit_by, ttr.edit_time, ttr.edit_flag
+    from crm.tbl_tran_remark ttr
+    join tbl_user u1 on ttr.create_by = u1.id
+    left join tbl_user u2 on ttr.edit_by = u2.id
+    where ttr.tran_id = #{tranId}
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     <!--
       WARNING - @mbggenerated

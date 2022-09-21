@@ -136,4 +136,9 @@
     where type_code=#{code}
     order by order_no asc
   </select>
+  <select id="selectOrderNoByValue" resultType="java.lang.String">
+    select order_no
+    from crm.tbl_dic_value
+    where value = #{value}
+  </select>
 </mapper>

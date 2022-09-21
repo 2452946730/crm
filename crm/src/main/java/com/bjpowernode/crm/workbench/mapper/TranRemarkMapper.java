@@ -1,6 +1,7 @@
 package com.bjpowernode.crm.workbench.mapper;
 
 import com.bjpowernode.crm.workbench.model.TranRemark;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -59,4 +60,11 @@ public interface TranRemarkMapper {
      * @return
      */
     int insertTramRemarkByList(List list);
+
+    /**
+     * 根据交易的id查询所属的备注列表
+     * @param tranId 交易的id
+     * @return
+     */
+    List<TranRemark> selectTranRemarkForDetailByTranId(@Param("tranId") String tranId);
 }

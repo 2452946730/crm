@@ -1,6 +1,7 @@
 package com.bjpowernode.crm.workbench.mapper;
 
 import com.bjpowernode.crm.workbench.model.Tran;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;
@@ -67,4 +68,11 @@ public interface TranMapper {
      * @return
      */
     int selectCountByConditionForPage(Map map);
+
+    /**
+     * 根据线索的id查询线索的明细
+     * @param id 线索的id
+     * @return
+     */
+    Tran selectTranForDetailById(@Param("id") String id);
 }

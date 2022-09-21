@@ -85,4 +85,9 @@ public class TranServiceImpl implements TranService {
         }
         return result;
     }
+
+    @Override
+    public Tran queryTranForDetailById(String id) {
+        return tranMapper.selectTranForDetailById(id);
+    }
 }

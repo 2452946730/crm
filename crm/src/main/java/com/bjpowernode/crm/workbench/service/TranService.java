@@ -30,4 +30,11 @@ public interface TranService {
      * @return
      */
     int saveCreateTran(Tran tran, User user);
+
+    /**
+     * 根据线索的id 查询线索的明细
+     * @param id 线索的id
+     * @return
+     */
+    Tran queryTranForDetailById(String id);
 }

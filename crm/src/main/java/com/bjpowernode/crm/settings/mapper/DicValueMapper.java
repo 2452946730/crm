@@ -1,6 +1,7 @@
 package com.bjpowernode.crm.settings.mapper;
 
 import com.bjpowernode.crm.settings.model.DicValue;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -59,4 +60,11 @@ public interface DicValueMapper {
      * @return
      */
     List<DicValue> selectDicValueByTypeCode(String code);
+
+    /**
+     * 根据value 查询 orderNo
+     * @param value
+     * @return
+     */
+    String selectOrderNoByValue(@Param("value") String value);
 }

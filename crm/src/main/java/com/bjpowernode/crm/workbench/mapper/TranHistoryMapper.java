@@ -1,6 +1,9 @@
 package com.bjpowernode.crm.workbench.mapper;
 
 import com.bjpowernode.crm.workbench.model.TranHistory;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface TranHistoryMapper {
     /**
@@ -50,4 +53,11 @@ public interface TranHistoryMapper {
      * @mbggenerated Wed Sep 21 09:25:29 CST 2022
      */
     int updateByPrimaryKey(TranHistory record);
+
+    /**
+     * 根据交易的id 查询交易历史的列表
+     * @param tranId 交易的id
+     * @return
+     */
+    List<TranHistory> selectTranHistoryForDetailByTranId(@Param("tranId") String tranId);
 }
