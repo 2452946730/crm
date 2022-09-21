@@ -49,7 +49,7 @@
   </select>
   <select id="selectTranByConditionForPage" resultMap="BaseResultMap">
     select t.id,u1.name owner ,t.money,u2.name create_by,t.create_time,t.contact_summary,c.fullname contacts_id,cus.name customer_id,
-           a.name activity_id,u3.name edit_by,t.edit_time,t.description,t.expected_date,t.next_contact_time,t.source,t.stage,t.type,t.name
+           a.name activity_id,u3.name edit_by,t.edit_time,t.description,t.expected_date,t.next_contact_time,d2.value source,d1.value stage,d3.value type,t.name
     from tbl_tran t
     JOIN tbl_user u1 ON t.OWNER = u1.id
     JOIN tbl_user u2 ON t.create_by = u2.id
@@ -57,6 +57,9 @@
     LEFT JOIN tbl_contacts c ON t.contacts_id = c.id
     JOIN tbl_customer cus ON t.customer_id = cus.id
     LEFT JOIN tbl_activity a ON t.activity_id = a.id
+    JOIN crm.tbl_dic_value d1 on d1.id = t.stage
+    LEFT JOIN tbl_dic_value d2 on d2.id = t.source
+    LEFT JOIN tbl_dic_value d3 on d3.id = t.type
     <where>
       <if test=" owner != null and owner != '' ">
         u1.name like cancat('%',#{owner},'%')

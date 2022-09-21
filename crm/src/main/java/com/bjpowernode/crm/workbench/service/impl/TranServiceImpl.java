@@ -4,9 +4,11 @@ import com.bjpowernode.crm.commons.utils.DateUtils;
 import com.bjpowernode.crm.commons.utils.UUIDUtils;
 import com.bjpowernode.crm.settings.model.User;
 import com.bjpowernode.crm.workbench.mapper.CustomerMapper;
+import com.bjpowernode.crm.workbench.mapper.TranHistoryMapper;
 import com.bjpowernode.crm.workbench.mapper.TranMapper;
 import com.bjpowernode.crm.workbench.model.Customer;
 import com.bjpowernode.crm.workbench.model.Tran;
+import com.bjpowernode.crm.workbench.model.TranHistory;
 import com.bjpowernode.crm.workbench.service.TranService;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +26,8 @@ public class TranServiceImpl implements TranService {
     private TranMapper tranMapper;
     @Resource
     private CustomerMapper customerMapper;
+    @Resource
+    private TranHistoryMapper tranHistoryMapper;
 
     @Override
     public List<Tran> queryTranByConditionForPage(Map map) {
@@ -66,7 +70,19 @@ public class TranServiceImpl implements TranService {
         if (result <= 0) {
             throw new RuntimeException("添加交易失败");
         }
-
+        //新建交易历史
+        TranHistory tranHistory = new TranHistory();
+        tranHistory.setCreateBy(user.getId());
+        tranHistory.setCreateTime(DateUtils.formateDateTime(new Date()));
+        tranHistory.setTranId(tran.getId());
+        tranHistory.setId(UUIDUtils.getUUID());
+        tranHistory.setMoney(tran.getMoney());
+        tranHistory.setStage(tran.getStage());
+        tranHistory.setExpectedDate(tran.getExpectedDate());
+        result = tranHistoryMapper.insert(tranHistory);
+        if (result <= 0) {
+            throw new RuntimeException("添加交易历史失败!");
+        }
         return result;
     }
 }

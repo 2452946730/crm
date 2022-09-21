@@ -46,9 +46,12 @@
 		let owner=$("#query-owner").val();
 		let name =$("#query-name").val();
 		let customerName=$("#query-customerName").val();
-		let stage=$("#query-stage option:selected").text();
+		/*let stage=$("#query-stage option:selected").text();
 		let type=$("#query-type option:selected").text();
-		let source=$("#query-source option:selected").text();
+		let source=$("#query-source option:selected").text();*/
+		let stage=$("#query-stage").val();
+		let type=$("#query-type").val();
+		let source=$("#query-source").val();
 		let contactsName=$("#query-contactsName").val();
 		//表单验证
 		//发送请求

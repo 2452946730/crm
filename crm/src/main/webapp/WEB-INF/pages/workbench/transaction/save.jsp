@@ -133,9 +133,9 @@
 				let name = $("#create-name").val();
 				let expectedDate = $("#create-expectedDate").val();
 				let customerId = $("#create-customerName").val();
-				let stage = $("#create-stage option:selected").text();
-				let type = $("#create-type option:selected").text();
-				let source = $("#create-source option:selected").text();
+				let stage = $("#create-stage").val();
+				let type = $("#create-type").val();
+				let source = $("#create-source").val();
 				let activityId = $("#create-activitySourceId").val();
 				let contactsId = $("#create-contactsNameId").val();
 				let description = $("#create-description").val();
